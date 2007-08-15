@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Flex-o Archives
+Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
 Version: 1.0.1

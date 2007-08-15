@@ -1,0 +1,26 @@
+2007-08-12 Heath Harrelson <heath.harrelson@gmail.com>
+	Update readme.txt a smidge.
+
+	* readme.txt: Bump highest tested field to 2.2.2.  Also rework the
+		description, because I don't think the default archives
+		widget is from Automattic.
+
+2007-07-27 Heath Harrelson <heath.harrelson@gmail.com>
+
+	Add a "Click to Expand" hint to the titles of the expandable links.
+	This necessitated rearranging the logic a bit, moving the flexo-link
+	class from the <li> to the <a> tags.
+
+	* flexo.js: Add a loop to init() to append "Click to Expand" to the title
+		of each link; change the logic of clickListener to acommodate the 
+		fact that class="flexo-list" is now on anchor.
+	* flexo_archives_widget.php: Move flexo-list class to the link.
+
+2007-07-25 Heath Harrelson <heath.harrelson@gmail.com>
+
+	First version that works in IE, Firefox, Safari.  Files added:
+
+	* LICENSE.txt: GPLv2 text
+	* flexo.js: JavaScript code needed to expand / contract archives
+	* flexo_archives_widget.php: Server-side code needed to query the WordPress
+		database and build the archive list.

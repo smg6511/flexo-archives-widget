@@ -18,7 +18,7 @@ This widget is designed to be a more compact alternative to the default archives
 
 This plugin is a sidebar widget.  You will need to have WordPress 2.2 or the [Automattic Widgets Plugin](http://automattic.com/code/widgets/ "Widgets Plugin at automattic.com").
 
-1. Expand `flexo-archives-widget.version..zip`
+1. Expand `flexo-archives-widget.version.zip`
 1. Upload the whole `flexo-archives-widget` directory to the `/wp-content/plugins/` directory
 1. Activate the Flexo Archives Widget plugin through the 'Plugins' menu in WordPress
 1. To add the widget to your sidebar, go to Presentation -> Widgets in WordPress.

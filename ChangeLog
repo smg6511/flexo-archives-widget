@@ -1,7 +1,11 @@
-2007-08-15 Heath Harrelson <heath.harrelson@gmail.com>
-	* readme.txt: Fixed typo in installation instructions.
+2007-08-18 Heath Harrelson <heath.harrelson@gmail.com>
+	* readme.txt: Bump current rev, fix typo in name of zip file.
+	* flexo_archives_widget: Determine the name of the plugin's 
+		directory programmatically, rather than hard-coding it.
+		Bump revision.
 
 2007-08-14 Heath Harrelson <heath.harrelson@gmail.com>
+	* readme.txt: Update installation instructions and bump current rev.
 	* flexo_archives_widget.php: Switch "Flex-o" to "Flexo."
 
 2007-08-12 Heath Harrelson <heath.harrelson@gmail.com>

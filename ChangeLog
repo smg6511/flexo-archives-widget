@@ -1,4 +1,7 @@
 2007-08-18 Heath Harrelson <heath.harrelson@gmail.com>
+	* readme.txt: Add note about breakage previous to 1.0.3
+
+2007-08-18 Heath Harrelson <heath.harrelson@gmail.com>
 	* readme.txt: Bump current rev, fix typo in name of zip file.
 	* flexo_archives_widget: Determine the name of the plugin's 
 		directory programmatically, rather than hard-coding it.

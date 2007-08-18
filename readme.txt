@@ -14,6 +14,8 @@ The Flexo Archives Widget displays your archives as a list of years that expands
 
 This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress 2.2.X.
 
+NOTE: Due to a silly mistake on my part, versions of the Flexo Archives Widget prior to version 1.0.3 don't actually work because the link to the JavaScript source was incorrect. I urge anyone who downloaded older versions to give the widget a try with the latest code.
+
 == Installation ==
 
 This plugin is a sidebar widget.  You will need to have WordPress 2.2 or the [Automattic Widgets Plugin](http://automattic.com/code/widgets/ "Widgets Plugin at automattic.com").

@@ -4,7 +4,7 @@ Donate link:
 Tags: sidebar, archive, archives, widget
 Requires at least: 2.0
 Tested up to: 2.2.2
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 Displays your archives as a compact list of years that expands when clicked.
 

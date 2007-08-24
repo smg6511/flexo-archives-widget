@@ -32,3 +32,20 @@ This plugin is a sidebar widget.  You will need to have WordPress 2.2 or the [Au
 
 1. Before and after expansion with the default theme
 
+== Version History ==
+
+= 1.0.4 =
+
+- Fix generation of JavaScript for sites where the blog URL and WordPress URL are different.
+
+= 1.0.3 =
+
+- Build up JavaScript URL programmatically so installing the plugin in a directory other than flexo-archives-widget won't break the plugin.
+
+= 1.0.2 =
+
+- Documentation changes.
+
+= 1.0.1 =
+
+- Initial release through WordPress plugins site.

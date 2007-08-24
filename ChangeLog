@@ -1,3 +1,9 @@
+2007-08-24 Heath Harrelson <heath.harrelson@gmail.com>
+	* readme.txt: Add version history.
+
+2007-08-23 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 1.0.4
+
 2007-08-22 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Use the WordPress install URL rather
 		than the blog URL for the JS file to accommodate users who
@@ -24,7 +30,6 @@
 		widget is from Automattic.
 
 2007-07-27 Heath Harrelson <heath.harrelson@gmail.com>
-
 	Add a "Click to Expand" hint to the titles of the expandable links.
 	This necessitated rearranging the logic a bit, moving the flexo-link
 	class from the <li> to the <a> tags.

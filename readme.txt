@@ -36,7 +36,7 @@ This plugin is a sidebar widget.  You will need to have WordPress 2.2 or the [Au
 
 = 1.0.4 =
 
-- Fix generation of JavaScript for sites where the blog URL and WordPress URL are different.
+- Fix generation of JavaScript URL for sites where the blog URL and WordPress URL are different.
 
 = 1.0.3 =
 

@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 1.0.4
+Version: 1.0.5
 Plugin URI: http://www.pointedstick.net/heath/flexo-archives-widget
 Author URI: http://www.pointedstick.net/heath/
 */
@@ -71,13 +71,15 @@ function flexo_widget_archives_init() {
 	function flexo_year_start ($year = '') {
 		// Ugly strings used in building the tags
 		$year_list_a = '<ul><li><a href="';
-		$year_list_b = '" class="flexo-link" title="Year ';
-		$year_list_c = ' archives">';
-		$year_list_d = '</a><ul class="flexo-list">';
+		$year_list_b = '" class="flexo-link" id="flexo-';
+		$year_list_c = '" title="Year ';
+		$year_list_d = ' archives">';
+		$year_list_e = '</a><ul class="flexo-list">';
 
 		// All together now!
 		$whole_thing = $year_list_a . get_year_link($year) . $year_list_b;
 		$whole_thing .= $year . $year_list_c . $year . $year_list_d;
+		$whole_thing .= $year . $year_list_e;
 
 		return $whole_thing;
 	}

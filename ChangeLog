@@ -1,4 +1,10 @@
 2007-08-28 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Change flexo_year_start() function
+		to provide the yearly archive links with an id and bump
+		version. More work to make it easier to keep track of 
+		which lists are expanded using a cookie.
+
+2007-08-28 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo.js: Rearrange logic to use the flexo link as the element
 		that list expansion / contraction operates on. This 
 		will make it easier to keep track of which lists are ex-

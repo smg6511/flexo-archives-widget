@@ -1,7 +1,7 @@
 /*
  * flexo.js by Heath Harrelson, Copyright (C) 2007
  *
- * Version: 1.0.1
+ * Version: 1.1.0
  * 
  * Expands and collapses menus.  Used by the Flexo Archives WordPress widget
  * (http://www.pointedstick.net/heath/flexo-archives-widget).
@@ -28,29 +28,22 @@
 
 var flexoToggle = {
 	init : function () {
-		var monthLists;  // List of ul.flexo-list elements
 		var yearLinks;   // List of all the expandable links
-		var numLists;    // Number of elements in monthLists
 		var numLinks;    // Number of elements in yearLinks
-		var hiddenList;  // The list we want to hide
 		var widget;      // Outermost container of the widget
 
 		// Dom support or bust!
 		if (!document.getElementById)
 			return;
 
-		// Get a list of all the yearly lists
-		monthLists = this.getElementByClassName(document, 'ul', 'flexo-list');
-		numLists = monthLists.length;
-
 		// Get a list of all the expandable links
-		yearLinks = this.getElementByClassName(document, 'a', 'flexo-link');
+		yearLinks = this.getElementByClassName(document, 'a', 
+							'flexo-link');
 		numLinks = yearLinks.length;
 
 		// Hide each list of months
-		for (var i = 0; i < numLists; i++) {
-			hiddenList = monthLists[i];
-			this.toggle(hiddenList);
+		for (var i = 0; i < numLinks; i++) {
+			this.setStateForListWithLink(yearLinks[i], false);
 		}
 
 		// Add a hint to each expandable link
@@ -63,28 +56,15 @@ var flexoToggle = {
 		flexoToggle.addEvent(widget, 'click', flexoToggle.clickListener);
 	},
 
-	// Show or hide an element (and its children)
-	toggle : function (el) {
-		if (el.style.display == 'block' || el.style.display == '') {
-			el.style.display = 'none';
-		} else {
-			el.style.display = 'block';
-		}
-	},
-
 	// Show or hide a list when the user clicks
 	clickListener : function (e) {
 		var targ;               // Element clicked
-		var startOfMenu;        // Element where the year's list starts
-		var flexLists;		// List of month lists
-		var aList;		// A month list
-		var len;                // Number of lists to toggle
 
 		// If event is undefined, this is IE
 		if (!e)
 			var e = window.event;
 
-		// More browser compat
+		// Get the element clicked
 		if (e.target) {
 			// W3C DOM events
 			targ = e.target;
@@ -99,33 +79,76 @@ var flexoToggle = {
 			targ = targ.parentNode;
 
 
-		// Find the elements to toggle (if any) and toggle them
-		if (targ.nodeName == 'A' && targ.className == 'flexo-link') {
-			// Grandparent should be start of the menu
-			startOfMenu = targ.parentNode.parentNode;
-			if (startOfMenu.nodeName != 'UL')
-				return true;
-
-			// Okay, we're in a menu. Try to get the month list.
-			flexLists = flexoToggle.getElementByClassName(startOfMenu, 'ul', 'flexo-list');
-			// If there's at least one month list
-			if (flexLists.length > 0) {
-				len = flexLists.length;
-				for (var i = 0; i < len; i++) {
-					aList = flexLists[i];
-					flexoToggle.toggle(aList);
-				}
-
-				// Don't follow link clicked
-				flexoToggle.preventDefault(e);
-				return false;
-			}
-
+		// Try to toggle this link
+		if (flexoToggle.setStateForListWithLink(targ, true)) {
+			// Don't follow link clicked
+			flexoToggle.preventDefault(e);
+			return false;
 		}
+
+		// Toggle failed, allow default action
+		return true;
 
 	},
 
-	// Prevent the default action of the DOM event
+	// Show or hide the list associated with element aLink.
+	// If updateCookie is true, add or remove aLink from the
+	// cookie that keeps track of open lists.
+	setStateForListWithLink : function (aLink, updateCookie) {
+		var startOfMenu;    // Element where archive list starts
+		var flexLists;      // Array of month lists
+		var len;            // The number of flexLists
+
+
+		// Grandparent should be start of archive list
+		startOfMenu = aLink.parentNode.parentNode;
+
+		// Bail if aLink node is not a Flexo Link or
+		// startOfMenu node is not an archive list
+		if (!flexoToggle.isFlexoLink(aLink) || 
+		    !flexoToggle.isListElement(startOfMenu))
+			return false;
+
+		// Get list(s) of months
+		flexLists = flexoToggle.getElementByClassName(startOfMenu,
+				'ul', 'flexo-list');
+
+		if (flexLists.length > 0) {
+			len = flexLists.length;
+			for (var i = 0; i < len; i++)
+				flexoToggle.setDisplay(flexLists[i]);
+		}
+
+		return true;
+	},
+
+	// Determine if DOM element el is a list (ul, ol)
+	isListElement : function (el) {
+		if (el.nodeName == 'UL' || el.nodeName == 'OL' ||
+			el.NodeName == 'DL')
+			return true;
+
+		return false;
+	},
+
+	// Determine if DOM element el is a Flexo Link
+	isFlexoLink : function (el) {
+		if (el.nodeName == 'A' && el.className == 'flexo-link')
+			return true;
+
+		return false;
+	},
+
+	// Show or hide DOM element el (and its children)
+	setDisplay : function (el) {
+		if (el.style.display == 'block' || el.style.display == '') {
+			el.style.display = 'none';
+		} else {
+			el.style.display = 'block';
+		}
+	},
+
+	// Prevent the default action of DOM event e
 	preventDefault : function (e) {
 		if (e.preventDefault) {
 			e.preventDefault(); // W3C DOM style

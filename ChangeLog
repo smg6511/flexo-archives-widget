@@ -1,3 +1,10 @@
+2007-08-28 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo.js: Rearrange logic to use the flexo link as the element
+		that list expansion / contraction operates on. This 
+		will make it easier to keep track of which lists are ex-
+		panded using a cookie. Rename toggle() to setDisplay().
+		Add isFlexoLink(), isListElement, setStateForListWithLink().
+
 2007-08-24 Heath Harrelson <heath.harrelson@gmail.com>
 	* readme.txt: Add version history.
 

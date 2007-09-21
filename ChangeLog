@@ -1,3 +1,14 @@
+2007-09-21 Heath Harrelson <heath.harrelson@gmail.gom>
+	* readme.txt: Update highest compatible version of WP.
+
+2007-09-21 Heath Harrelson <heath.harrelson@gmail.gom>
+	* flexo.js: Check for themes that don't put the widget's ID
+		in the element containing the widget. This keeps us from
+		hiding the archive lists and making them unreachable on
+		broken themes.
+	* readme.txt: Add a FAQ about list colors. Not my fault. Really.
+		Update version history and stable version.
+
 2007-08-28 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Change flexo_year_start() function
 		to provide the yearly archive links with an id and bump

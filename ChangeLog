@@ -1,4 +1,7 @@
 2007-09-21 Heath Harrelson <heath.harrelson@gmail.gom>
+	* readme.txt: Update highest compatible version of WP.
+
+2007-09-21 Heath Harrelson <heath.harrelson@gmail.gom>
 	* flexo.js: Check for themes that don't put the widget's ID
 		in the element containing the widget. This keeps us from
 		hiding the archive lists and making them unreachable on

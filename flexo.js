@@ -1,7 +1,8 @@
+/* vim: set noai ts=4 sw=4: */
 /*
  * flexo.js by Heath Harrelson, Copyright (C) 2007
  *
- * Version: 1.1.0
+ * Version: 1.1.1
  * 
  * Expands and collapses menus.  Used by the Flexo Archives WordPress widget
  * (http://www.pointedstick.net/heath/flexo-archives-widget).
@@ -34,6 +35,10 @@ var flexoToggle = {
 
 		// Dom support or bust!
 		if (!document.getElementById)
+			return;
+
+		// Theme should put widget's ID in its containing element.
+		if (!document.getElementById('flexo-archives'))
 			return;
 
 		// Get a list of all the expandable links

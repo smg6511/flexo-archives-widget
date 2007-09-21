@@ -4,7 +4,7 @@ Donate link:
 Tags: sidebar, archive, archives, widget
 Requires at least: 2.0
 Tested up to: 2.2.2
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 
 Displays your archives as a compact list of years that expands when clicked.
 
@@ -28,11 +28,24 @@ This plugin is a sidebar widget.  You will need to have WordPress 2.2 or the [Au
 
 == Frequently Asked Questions ==
 
+= The colors of the archive lists are funny. =
+
+While this isn't a question, it is something I hear a lot about in connnection
+with the Flexo Archives Widget. 
+
+This isn't the widget's fault. The colors of the lists are set (or not) by your theme.  All my JavaScript does is hide or display the lists.  It doesn't care about colors.  It's likely that your theme doesn't have rules in its stylesheet to match the nested lists generated.
+
 == Screenshots ==
 
 1. Before and after expansion with the default theme
 
 == Version History ==
+
+= 1.0.5 =
+
+- Added an ID to each flexo-list. Added a check for themes that don't put the
+  widget's ID in the element that contains it. Now we don't hide the archive
+lists on such broken themes, so they stay accessible.
 
 = 1.0.4 =
 

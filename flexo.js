@@ -83,7 +83,6 @@ var flexoToggle = {
 		if (targ.nodeType == 3)
 			targ = targ.parentNode;
 
-
 		// Try to toggle this link
 		if (flexoToggle.setStateForListWithLink(targ, true)) {
 			// Don't follow link clicked
@@ -100,24 +99,50 @@ var flexoToggle = {
 	// If updateCookie is true, add or remove aLink from the
 	// cookie that keeps track of open lists.
 	setStateForListWithLink : function (aLink, updateCookie) {
+		var cookieText;     // Contents of the cookie
 		var startOfMenu;    // Element where archive list starts
 		var flexLists;      // Array of month lists
 		var len;            // The number of flexLists
-
 
 		// Grandparent should be start of archive list
 		startOfMenu = aLink.parentNode.parentNode;
 
 		// Bail if aLink node is not a Flexo Link or
-		// startOfMenu node is not an archive list
+		// startOfMenu node is not a list
 		if (!flexoToggle.isFlexoLink(aLink) || 
 		    !flexoToggle.isListElement(startOfMenu))
 			return false;
 
 		// Get list(s) of months
 		flexLists = flexoToggle.getElementByClassName(startOfMenu,
-				'ul', 'flexo-list');
+							'ul', 'flexo-list');
 
+		// Do cookie maintenance if called from click handler
+		if (updateCookie) {
+			cookieText = flexoToggle.getCookie('flexo');
+
+			if (cookieText && cookieText != '') {
+				if (flexoToggle.inCookie('flexo', aLink.id)) {
+					// If aLink is in the cookie, remove it
+					flexoToggle.replaceCookie('flexo', '');
+				} else {
+					// If cookie is set, but aLink is not in it, tell
+					// the other list to close before adding aLink
+					var otherLink = document.getElementById(cookieText);
+					flexoToggle.setStateForListWithLink(otherLink, true);
+					flexoToggle.replaceCookie('flexo', aLink.id);
+				}
+			} else {
+				// If cookie unset or blank, add aLink to it
+				flexoToggle.replaceCookie('flexo', aLink.id);
+			}
+		} else {
+			// Called from init. Don't collapse open list.
+			if (flexoToggle.inCookie('flexo', aLink.id))
+				return true;
+		}
+
+		// Show or hide month list
 		if (flexLists.length > 0) {
 			len = flexLists.length;
 			for (var i = 0; i < len; i++)
@@ -125,6 +150,59 @@ var flexoToggle = {
 		}
 
 		return true;
+	},
+
+	// Determine if list id is in cookie cookieName
+	inCookie : function (cookieName, id) {
+		var cookieText = flexoToggle.getCookie(cookieName);
+
+		// If the cookie is set and id is a substring
+		if (cookieText && cookieText.indexOf(id) != -1)
+			return true;
+
+		return false;
+	},
+
+	// Add list id to the cookie cookieName
+	replaceCookie : function (cookieName, id) {
+		if (cookieName == '')
+			return;
+
+		// Replace current cookie with element id
+		flexoToggle.setCookie(cookieName, id, '/heath'); // FIXME
+	},
+
+	// Attempt to get the text of cookie cookieName
+	getCookie : function (cookieName) {
+		var allCookies = document.cookie;
+		var startIndex = allCookies.indexOf(cookieName);
+		
+		// Named cookie is set
+		if (startIndex != -1) {
+			// Move past name and equals sign
+			startIndex += 1 + cookieName.length;
+
+			var endIndex = allCookies.indexOf(';', startIndex);
+			if (endIndex == -1)
+				endIndex = allCookies.length;
+
+			var cookieText = allCookies.substring(startIndex,
+						endIndex);
+			return unescape(cookieText);
+		}
+
+		// Named cookie not set
+		return null;
+	},
+
+	// Set a nonpersistent named cookie with the given text and scope
+	setCookie : function (cookieName, text, scope) {
+		var theCookie = cookieName + '=' + escape(text);
+
+		if (scope && scope != '')
+			theCookie += '; path=' + scope;
+
+		document.cookie = theCookie;
 	},
 
 	// Determine if DOM element el is a list (ul, ol)

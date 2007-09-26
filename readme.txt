@@ -10,7 +10,7 @@ Displays your archives as a compact list of years that expands when clicked.
 
 == Description ==
 
-The Flexo Archives Widget displays your archives as a list of years that expands when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option of displaying the number of posts in each month.
+The Flexo Archives Widget displays your archives as lists of years that expand when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option of displaying the number of posts in each month.
 
 This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress 2.2.X.
 

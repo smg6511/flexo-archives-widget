@@ -4,7 +4,7 @@ Donate link:
 Tags: sidebar, archive, archives, widget
 Requires at least: 2.0
 Tested up to: 2.3
-Stable tag: 1.0.5
+Stable tag: 1.0.7
 
 Displays your archives as a compact list of years that expands when clicked.
 
@@ -40,6 +40,14 @@ This isn't the widget's fault. The colors of the lists are set (or not) by your 
 1. Before and after expansion with the default theme
 
 == Version History ==
+
+= 1.0.7 =
+
+- Bug fix for themes that don't set the ID of the widget's root element. We previously just didn't work on such themes; now we locate the root element using the flexo-links. Busted themes should work now, as long as they use a list for the sidebar.
+
+= 1.0.6 =
+
+- Not released.
 
 = 1.0.5 =
 

@@ -1,7 +1,15 @@
-2007-09-21 Heath Harrelson <heath.harrelson@gmail.gom>
+2007-10-20 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo.js: Bugfix for themes that don't set the ID of the 
+		widget's root element.  We previously just refused
+		to work, but now we find the widget's root using the
+		flexo links.
+	* flexo_archives_widget.php: Bump version prior to tag.
+	* readme.txt: Update version history and stable version.
+
+2007-09-21 Heath Harrelson <heath.harrelson@gmail.com>
 	* readme.txt: Update highest compatible version of WP.
 
-2007-09-21 Heath Harrelson <heath.harrelson@gmail.gom>
+2007-09-21 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo.js: Check for themes that don't put the widget's ID
 		in the element containing the widget. This keeps us from
 		hiding the archive lists and making them unreachable on

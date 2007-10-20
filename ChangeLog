@@ -1,4 +1,7 @@
 2007-10-20 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 1.0.7
+
+2007-10-20 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo.js: Bugfix for themes that don't set the ID of the 
 		widget's root element.  We previously just refused
 		to work, but now we find the widget's root using the

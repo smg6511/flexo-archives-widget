@@ -2,7 +2,7 @@
 /*
  * flexo.js by Heath Harrelson, Copyright (C) 2007
  *
- * Version: 1.1.1
+ * Version: 1.1.2
  * 
  * Expands and collapses menus.  Used by the Flexo Archives WordPress widget
  * (http://www.pointedstick.net/heath/flexo-archives-widget).
@@ -28,6 +28,8 @@
  */
 
 var flexoToggle = {
+	widgetRoot : null,   // The widget's root element
+
 	init : function () {
 		var yearLinks;   // List of all the expandable links
 		var numLinks;    // Number of elements in yearLinks
@@ -37,18 +39,22 @@ var flexoToggle = {
 		if (!document.getElementById)
 			return;
 
-		// Theme should put widget's ID in its containing element.
-		if (!document.getElementById('flexo-archives'))
+		// If the widget's root can't be found, we can't
+		// do anything.
+		this.findWidgetRoot();
+		if (!this.widgetRoot) {
 			return;
+		} else {
+			widget = this.widgetRoot;
+		}
 
 		// Get a list of all the expandable links
-		yearLinks = this.getElementByClassName(document, 'a', 
-							'flexo-link');
+		yearLinks = this.getElementByClassName(widget, 'a', 'flexo-link');
 		numLinks = yearLinks.length;
 
 		// Hide each list of months
 		for (var i = 0; i < numLinks; i++) {
-			this.setStateForListWithLink(yearLinks[i], false);
+			this.setStateForListWithLink(yearLinks[i]);
 		}
 
 		// Add a hint to each expandable link
@@ -56,9 +62,8 @@ var flexoToggle = {
 			yearLinks[i].title += ' (Click to Expand)';
 		}
 
-		// Hook event delegate to the start of the widget
-		widget = document.getElementById('flexo-archives');
-		flexoToggle.addEvent(widget, 'click', flexoToggle.clickListener);
+		// Hook event delegate to the root of the widget
+		this.addEvent(widget, 'click', this.clickListener);
 	},
 
 	// Show or hide a list when the user clicks
@@ -83,9 +88,8 @@ var flexoToggle = {
 		if (targ.nodeType == 3)
 			targ = targ.parentNode;
 
-
 		// Try to toggle this link
-		if (flexoToggle.setStateForListWithLink(targ, true)) {
+		if (flexoToggle.setStateForListWithLink(targ)) {
 			// Don't follow link clicked
 			flexoToggle.preventDefault(e);
 			return false;
@@ -93,17 +97,13 @@ var flexoToggle = {
 
 		// Toggle failed, allow default action
 		return true;
-
 	},
 
 	// Show or hide the list associated with element aLink.
-	// If updateCookie is true, add or remove aLink from the
-	// cookie that keeps track of open lists.
-	setStateForListWithLink : function (aLink, updateCookie) {
+	setStateForListWithLink : function (aLink) {
 		var startOfMenu;    // Element where archive list starts
 		var flexLists;      // Array of month lists
 		var len;            // The number of flexLists
-
 
 		// Grandparent should be start of archive list
 		startOfMenu = aLink.parentNode.parentNode;
@@ -125,6 +125,28 @@ var flexoToggle = {
 		}
 
 		return true;
+	},
+
+	// Find the root element of the widget.
+	findWidgetRoot : function () {
+		// Nice themes will supply the ID of the widget.
+		var el = document.getElementById('flexo-archives');
+		var flexLinks;
+
+		// This theme is not so nice. :(
+		if (!el) {
+			// Get the list of flexo-links
+			flexLinks = flexoToggle.getElementByClassName(document, 'a',
+									'flexo-link');
+
+			// The widget's root is the great-grandparent of the
+			// first flexo-link
+			el = flexLinks[0].parentNode.parentNode.parentNode;
+		}
+
+		// Set class variable
+		if (el)
+			flexoToggle.widgetRoot = el;
 	},
 
 	// Determine if DOM element el is a list (ul, ol)

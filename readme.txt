@@ -1,7 +1,7 @@
 === Flexo Archives Widget ===
 Contributors: heathharrelson
 Donate link: 
-Tags: sidebar, archive, archives, widget
+Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.0
 Tested up to: 2.3
 Stable tag: 1.0.7

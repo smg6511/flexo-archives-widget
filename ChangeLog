@@ -1,3 +1,11 @@
+2007-10-21 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo.js: Change logic to only display one list at a time.
+	* flexo_archives_widget.php: Use sprintf in flexo_year_start.
+		Bump version prior to tag.
+	* readme.txt: Add more tags to widget, hopefully making it
+		easier to find. Fix a typo in the FAQs. Add a note
+		about how to test if your theme has a problem.
+
 2007-10-20 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 1.0.7
 

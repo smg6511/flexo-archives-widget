@@ -1,3 +1,7 @@
+2007-10-31 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget: Add code to make jQuery available.
+	* flexo.js: Rewrite using jQuery.
+
 2007-10-21 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 1.0.8
 

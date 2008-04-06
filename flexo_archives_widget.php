@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 1.0.8
+Version: 1.1.0
 Plugin URI: http://www.pointedstick.net/heath/flexo-archives-widget
 Author URI: http://www.pointedstick.net/heath/
 */
@@ -33,6 +33,9 @@ Author URI: http://www.pointedstick.net/heath/
 
 // WP plugin directory
 define('PLUGIN_DIR', 'wp-content/plugins');
+
+// Where WP puts jQuery
+define('JQUERY_PATH', 'wp-includes/js/jquery/jquery.js');
 
 // Name of the JavaScript file
 define('FLEXO_JS', 'flexo.js');
@@ -104,9 +107,12 @@ function flexo_widget_archives_init() {
 
 	// Helper function that prints the url for our javascript
 	function flexo_script () {
-		$url = get_bloginfo('wpurl') .'/'.  PLUGIN_DIR . '/' . FLEXO_DIR . '/' . FLEXO_JS;
+		$jquery_url = get_bloginfo('wpurl') . '/' . JQUERY_PATH;
+		$flexo_url = get_bloginfo('wpurl') .'/'.  PLUGIN_DIR . '/' . FLEXO_DIR . '/' . FLEXO_JS;
 ?>
-	<script type="text/javascript" src="<?php echo  $url ?>"></script>
+
+	<script type="text/javascript" src="<?php echo  $jquery_url ?>"></script>
+	<script type="text/javascript" src="<?php echo  $flexo_url ?>"></script>
 <?php
 	}
 

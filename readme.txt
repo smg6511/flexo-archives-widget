@@ -41,6 +41,10 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Version History ==
 
+= 1.0.9 =
+
+- Documentation changes only; note 2.5 support.
+
 = 1.0.8 =
 
 - Change JavaScript to only display one year's archives at a time.

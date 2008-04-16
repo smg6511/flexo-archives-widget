@@ -1,3 +1,16 @@
+2008-04-16 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Add a description of the widget;
+		displays when user is in widget management panel.
+		Bump version number.
+	* readme.txt: Update stable version number.
+
+2008-04-05 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 1.0.9
+
+2008-04-05 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Bump version number
+	* readme.txt: Update version numbers
+
 2007-10-21 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 1.0.8
 

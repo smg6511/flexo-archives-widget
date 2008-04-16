@@ -1,4 +1,7 @@
 2008-04-16 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 1.0.10
+
+2008-04-16 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Add a description of the widget;
 		displays when user is in widget management panel.
 		Bump version number.

@@ -3,8 +3,8 @@ Contributors: heathharrelson
 Donate link: 
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.0
-Tested up to: 2.3
-Stable tag: 1.0.8
+Tested up to: 2.5
+Stable tag: 1.0.11
 
 Displays your archives as a compact list of years that expands when clicked.
 
@@ -12,7 +12,7 @@ Displays your archives as a compact list of years that expands when clicked.
 
 The Flexo Archives Widget displays your archives as a list of years that expands when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option of displaying the number of posts in each month.
 
-This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress 2.2.X / 2.3.X.
+This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress 2.2.X / 2.3.X / 2.5.x.
 
 == Installation ==
 
@@ -40,6 +40,10 @@ To test whether the problem is your theme, temporarily configure your blog to us
 1. Before and after expansion with the default theme
 
 == Version History ==
+
+= 1.0.9 =
+
+- Documentation changes only; tested for WordPress 2.5.
 
 = 1.0.8 =
 

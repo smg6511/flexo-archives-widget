@@ -41,6 +41,14 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Version History ==
 
+= 1.0.11 =
+
+- Use a better method of getting the JavaScript into the page header.
+
+= 1.0.10 =
+
+- Display a description of the widget in the widget management panel (another improvement for WoredPress 2.5).
+
 = 1.0.9 =
 
 - Documentation changes only; tested for WordPress 2.5.

@@ -107,12 +107,9 @@ function flexo_widget_archives_init() {
 
 	// Helper function that prints the url for our javascript
 	function flexo_script () {
-		$jquery_url = get_bloginfo('wpurl') . '/' . JQUERY_PATH;
-		$flexo_url = get_bloginfo('wpurl') .'/'.  PLUGIN_DIR . '/' . FLEXO_DIR . '/' . FLEXO_JS;
+		$url = get_bloginfo('wpurl') .'/'.  PLUGIN_DIR . '/' . FLEXO_DIR . '/' . FLEXO_JS;
 ?>
-
-	<script type="text/javascript" src="<?php echo  $jquery_url ?>"></script>
-	<script type="text/javascript" src="<?php echo  $flexo_url ?>"></script>
+	<script type="text/javascript" src="<?php echo  $url ?>"></script>
 <?php
 	}
 
@@ -169,13 +166,36 @@ function flexo_widget_archives_init() {
 
 	// Register our widgets with the widget system and add a callback to print our CSS
 	function flexo_widget_register () {
+		$name = __('Flexo Archives');
+		$desc = __('Your archives as an expandable list of years');
+		$widget_cb = 'flexo_widget_archives';
+		$control_cb = 'flexo_widget_archives_control';
+		$css_class = 'flexo';
+
 		// Tell the dynamic sidebar about our widget
-		register_sidebar_widget('Flexo Archives', 'flexo_widget_archives', 'flexo');
-		register_widget_control('Flexo Archives', 'flexo_widget_archives_control', 300, 100);
+		if (function_exists('wp_register_sidebar_widget')) {
+			$widget_ops = array('class' => $css_class, 'description' => $desc);
+			$control_ops = array('width' => 250, 'height' => 100, 'id_base' => 'flexo-archives');
+			$id = 'flexo-archives'; // Never never never translate an id
+
+			wp_register_sidebar_widget($id, $name, $widget_cb, $widget_ops);
+			wp_register_widget_control($id, $name, $control_cb, $control_ops);
+		} else {
+			register_sidebar_widget($name, $widget_cb, $css_class);
+			register_widget_control($name, $control_cb, 250, 100);
+		}
 
 		// Add CSS and JavaScript to header if we're active
 		if (is_active_widget('flexo_widget_archives')) {
-			add_action('wp_head', 'flexo_script');
+			if (function_exists('wp_enqueue_script')) {
+				/* FIXME: Make animations optional */
+				$jsurl = get_bloginfo('wpurl') .'/'. PLUGIN_DIR . 
+				         '/' . FLEXO_DIR . '/' . FLEXO_JS;
+				wp_enqueue_script('flexo', $jsurl);
+			} else {
+				/* FIXME: Test for JQuery!         */
+				add_action('wp_head', 'flexo_script');
+			}
 		}
 	}
 

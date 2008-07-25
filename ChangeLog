@@ -1,3 +1,9 @@
+2008-07-25 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Change the plugin URI.
+		Bump version number.
+	* readme.txt: Update latest WordPress version tested.
+		Updated stable version, description, installation, history.
+
 2008-04-17 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 1.0.11
 

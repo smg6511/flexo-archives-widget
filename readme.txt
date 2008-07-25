@@ -3,8 +3,8 @@ Contributors: heathharrelson
 Donate link: 
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.0
-Tested up to: 2.5
-Stable tag: 1.0.11
+Tested up to: 2.6
+Stable tag: 1.0.12
 
 Displays your archives as a compact list of years that expands when clicked.
 
@@ -12,16 +12,16 @@ Displays your archives as a compact list of years that expands when clicked.
 
 The Flexo Archives Widget displays your archives as a list of years that expands when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option of displaying the number of posts in each month.
 
-This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress 2.2.X / 2.3.X / 2.5.x.
+This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress.
 
 == Installation ==
 
-This plugin is a sidebar widget.  You will need to have WordPress 2.2 or greater or the [Automattic Widgets Plugin](http://automattic.com/code/widgets/ "Widgets Plugin at automattic.com").
+This plugin is a sidebar widget, so you will need to have WordPress 2.2 or greater. In principle, the widget should work in earlier versions of WordPress with the [Automattic Widgets Plugin](http://automattic.com/code/widgets/ "Widgets Plugin at automattic.com"), but this has not been tested.
 
 1. Expand `flexo-archives-widget.VERSION.zip`
 1. Upload the whole `flexo-archives-widget` directory to the `/wp-content/plugins/` directory.
 1. Activate the Flexo Archives Widget plugin through the 'Plugins' menu in WordPress.
-1. To add the widget to your sidebar, go to Presentation -> Widgets in WordPress.
+1. To add the widget to your sidebar, go to Presentation -> Widgets in WordPress (Design -> Widgets in WordPress 2.6).
 1. Configure the widget's title and whether post counts are displayed.
 
 == Frequently Asked Questions ==
@@ -40,6 +40,10 @@ To test whether the problem is your theme, temporarily configure your blog to us
 1. Before and after expansion with the default theme
 
 == Version History ==
+
+= 1.0.12 =
+
+- Documentation changes only. Tested for WordPress 2.6.
 
 = 1.0.11 =
 

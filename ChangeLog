@@ -1,4 +1,7 @@
 2011-01-23 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 2.0.0
+
+2011-01-23 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Refactor to not use nested functions.
 		Remove support for ancient versions of WordPress.
 		Add option to animate list expansion using jQuery.

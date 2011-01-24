@@ -2,34 +2,36 @@
 Contributors: heathharrelson
 Donate link: 
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
-Requires at least: 2.0
-Tested up to: 2.6
-Stable tag: 1.0.12
+Requires at least: 2.7
+Tested up to: 3.1 RC3
+Stable tag: 2.0.0
 
-Displays your archives as a compact list of years that expands when clicked.
+Displays your archives as a compact list of years that expands when clicked, with optional animation.
 
 == Description ==
 
-The Flexo Archives Widget displays your archives as a list of years that expands when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option of displaying the number of posts in each month.
+The Flexo Archives Widget displays your archives as a list of years that expands when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option to animate the expansion and to display the number of posts in each month.
 
-This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress.
+This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress. If you've been blogging regularly for several years, the list of your archives might be quite long. If you use this widget, though, it will be displayed as a much smaller list of years.
 
 == Installation ==
 
-This plugin is a sidebar widget, so you will need to have WordPress 2.2 or greater. In principle, the widget should work in earlier versions of WordPress with the [Automattic Widgets Plugin](http://automattic.com/code/widgets/ "Widgets Plugin at automattic.com"), but this has not been tested.
+*Note: Because of some of the functions used internally, you must be using at least WordPress 2.7.  For ancient versions of WordPress (back to 2.2 and earlier), you should be using the 1.X version.*
 
+If your server is cooperative, you can install the widget automatically by going to your blog's plugin administration panel, clicking the 'Add New' button, searching for the term 'Flexo', and clicking the 'Install' link.  If the automatic install fails for some reason, do the following:
+
+1. Download the zip file (`flexo-archives-widget.VERSION.zip`) from the WordPress plugins site.
 1. Expand `flexo-archives-widget.VERSION.zip`
 1. Upload the whole `flexo-archives-widget` directory to the `/wp-content/plugins/` directory.
-1. Activate the Flexo Archives Widget plugin through the 'Plugins' menu in WordPress.
-1. To add the widget to your sidebar, go to Presentation -> Widgets in WordPress (Design -> Widgets in WordPress 2.6).
-1. Configure the widget's title and whether post counts are displayed.
+1. Activate the Flexo Archives Widget plugin through the 'Plugins' menu in the WordPress admin interface.
+1. To add the widget to your sidebar, go to the widgets panel in your admin interface.
+1. Configure the widget's title and whether expansion is animated and post counts are displayed.
 
 == Frequently Asked Questions ==
 
 = The colors of the archive lists are funny. =
 
-While this isn't a question, it is something I hear a lot about in connection
-with the Flexo Archives Widget. 
+This is something I hear a lot about in connection with the Flexo Archives Widget. 
 
 This isn't the widget's fault. The colors of the lists are set (or not) by your theme.  All my JavaScript does is hide or display the lists.  It doesn't care about colors.  It's likely that your theme doesn't have rules in its stylesheet to match the nested lists generated.
 
@@ -39,54 +41,70 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 1. Before and after expansion with the default theme
 
-== Version History ==
+== ChangeLog ==
+
+= 2.0.0 =
+
+* Rewrite using jQuery for expand / contract code.
+* Add animation.
+* Drop support for ancient versions of WordPress.
+* Test for WordPress 3.1.
+
+= 1.0.13 =
+
+* Documentation changes only.  Tested for WordPress 2.7.
 
 = 1.0.12 =
 
-- Documentation changes only. Tested for WordPress 2.6.
+* Documentation changes only. Tested for WordPress 2.6.
 
 = 1.0.11 =
 
-- Use a better method of getting the JavaScript into the page header.
+* Use a better method of getting the JavaScript into the page header.
 
 = 1.0.10 =
 
-- Display a description of the widget in the widget management panel (another improvement for WoredPress 2.5).
+* Display a description of the widget in the widget management panel (another improvement for WoredPress 2.5).
 
 = 1.0.9 =
 
-- Documentation changes only; tested for WordPress 2.5.
+* Documentation changes only; tested for WordPress 2.5.
 
 = 1.0.8 =
 
-- Change JavaScript to only display one year's archives at a time.
+* Change JavaScript to only display one year's archives at a time.
 
 = 1.0.7 =
 
-- Bug fix for themes that don't set the ID of the widget's root element. We previously just didn't work on such themes; now we locate the root element using the flexo-links. Busted themes should work now, as long as they use a list for the sidebar.
+* Bug fix for themes that don't set the ID of the widget's root element. We previously just didn't work on such themes; now we locate the root element using the flexo-links. Busted themes should work now, as long as they use a list for the sidebar.
 
 = 1.0.6 =
 
-- Not released.
+* Not released.
 
 = 1.0.5 =
 
-- Added an ID to each flexo-list. Added a check for themes that don't put the
+* Added an ID to each flexo-list. Added a check for themes that don't put the
   widget's ID in the element that contains it. Now we don't hide the archive
 lists on such broken themes, so they stay accessible.
 
 = 1.0.4 =
 
-- Fix generation of JavaScript URL for sites where the blog URL and WordPress URL are different.
+* Fix generation of JavaScript URL for sites where the blog URL and WordPress URL are different.
 
 = 1.0.3 =
 
-- Build up JavaScript URL programmatically so installing the plugin in a directory other than flexo-archives-widget won't break the plugin.
+* Build up JavaScript URL programmatically so installing the plugin in a directory other than flexo-archives-widget won't break the plugin.
 
 = 1.0.2 =
 
-- Documentation changes.
+* Documentation changes.
 
 = 1.0.1 =
 
-- Initial release through WordPress plugins site.
+* Initial release through WordPress plugins site.
+
+== Upgrade Notice ==
+
+= 2.0.0 =
+Adds animation when the list is expanded / contracted.

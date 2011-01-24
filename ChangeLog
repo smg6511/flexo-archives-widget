@@ -1,3 +1,13 @@
+2011-01-23 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Refactor to not use nested functions.
+		Remove support for ancient versions of WordPress.
+		Add option to animate list expansion using jQuery.
+		Increase version number.
+	* flexo.js: Rewrite to use jQuery.
+	* flexo-anim.js: Added. JavaScript for animated list expansion.
+	* readme.txt: Update latest WordPress tested.
+		Update stable version, description, installation, history.
+
 2008-12-19 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 1.0.13
 

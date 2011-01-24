@@ -1,6 +1,6 @@
 /* vim: set noai ts=4 sw=4: */
 /*
- * flexo.js by Heath Harrelson, Copyright (C) 2011
+ * flexo-anim.js by Heath Harrelson, Copyright (C) 2011
  *
  * Version: 2.0
  * 
@@ -31,12 +31,7 @@ jQuery(document).ready(
 		jQuery('ul.flexo-list').hide();	// hide year lists
 		jQuery('a.flexo-link').click(
 			function() {
-				var nextEl = jQuery(this).next();
-				if (nextEl.is(':hidden')) {
-					nextEl.show();
-				} else {
-					nextEl.hide();
-				}
+				jQuery(this).next().slideToggle('fast');
 				return false;
 			}
 		);

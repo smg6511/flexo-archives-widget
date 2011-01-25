@@ -16,7 +16,7 @@ This widget is designed to be a more compact alternative to the default archives
 
 == Installation ==
 
-*Note: Because of some of the functions used internally, you must be using at least WordPress 2.7.  For ancient versions of WordPress (back to 2.2 and earlier), you should be using the 1.X version.*
+Note: Because of some of the functions used internally, you must be using at least WordPress 2.7.  For ancient versions of WordPress (back to 2.2 and earlier), you should be using the 1.X version.
 
 If your server is cooperative, you can install the widget automatically by going to your blog's plugin administration panel, clicking the 'Add New' button, searching for the term 'Flexo', and clicking the 'Install' link.  If the automatic install fails for some reason, do the following:
 

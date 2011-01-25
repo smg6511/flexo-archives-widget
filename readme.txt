@@ -31,9 +31,7 @@ If your server is cooperative, you can install the widget automatically by going
 
 = The colors of the archive lists are funny. =
 
-This is something I hear a lot about in connection with the Flexo Archives Widget. 
-
-This isn't the widget's fault. The colors of the lists are set (or not) by your theme.  All my JavaScript does is hide or display the lists.  It doesn't care about colors.  It's likely that your theme doesn't have rules in its stylesheet to match the nested lists generated.
+This is something I hear a lot about in connection with the Flexo Archives Widget, but it isn't the widget's fault. The colors of the lists are set (or not) by your theme.  All the widget does is hide or display the lists. It's likely that your theme doesn't have rules in its stylesheet to match the nested lists generated.
 
 To test whether the problem is your theme, temporarily configure your blog to use the default WordPress theme. Expand and contract a few year links in the sidebar. If things don't look odd, the problem is probably with your theme.
 

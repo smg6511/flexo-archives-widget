@@ -1,3 +1,7 @@
+2011-02-05 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Add nonce field to settings form,
+		nonce check when form submitted.
+
 2011-01-24 Heath Harrelson <heath.harrelson@gmail.com>
 	* readme.txt: Improve wording.
 

@@ -56,9 +56,10 @@ function flexo_widget_archives_init () {
 
 // Handle widget configuration
 function flexo_widget_archives_control () {
-	/* FIXME: Secure using nonce code */
 	$options = $newoptions = get_option('widget_flexo');
-	if ( $_POST["flexo-submit"] ) {
+	if ( !empty($_POST["flexo-submit"]) &&
+	     check_admin_referer('flexo-archives-widget-options') )
+	{
 		$newoptions['count'] = isset($_POST['flexo-count']);
 		$newoptions['animate'] = isset($_POST['flexo-animate']);
 		$newoptions['title'] = strip_tags(stripslashes($_POST["flexo-title"]));
@@ -70,8 +71,10 @@ function flexo_widget_archives_control () {
 	$count = $options['count'] ? 'checked="checked"' : '';
 	$animate = $options['animate'] ? 'checked="checked"' : '';
 	$title = attribute_escape($options['title']);
+
+	wp_nonce_field('flexo-archives-widget-options');
 ?>
-		<p><label for="flexo-title"><?php _e('Title:'); ?> <input style="width: 250px;" id="flexo-title" name="flexo-title" type="text" value="<?php echo $title; ?>" /></label></p>
+		<p><label for="flexo-title"><?php _e('Title:'); ?> <input style="width: 90%;" id="flexo-title" name="flexo-title" type="text" value="<?php echo $title; ?>" /></label></p>
 		<p style="text-align:right;margin-right:40px;"><label for="flexo-animate"><?php _e('Animate lists'); ?> <input class="checkbox" type="checkbox" <?php echo $animate; ?> id="flexo-animate" name="flexo-animate"/></label></p>
 		<p style="text-align:right;margin-right:40px;"><label for="flexo-count"><?php _e('Show post counts'); ?> <input class="checkbox" type="checkbox" <?php echo $count; ?> id="flexo-count" name="flexo-count"/></label></p>
 		<input type="hidden" id="flexo-submit" name="flexo-submit" value="1" />

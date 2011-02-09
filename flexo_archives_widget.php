@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.0.0
+Version: 2.0.1
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 

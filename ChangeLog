@@ -1,4 +1,7 @@
 2011-02-10 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Fixed typo in uninstall function.
+
+2011-02-10 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Use WP_PLUGIN_URL constant to build
 		the script URL instead of determining it ourselves. The 
 		old way was only required for old versions of WordPress.

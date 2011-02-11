@@ -207,7 +207,7 @@ function flexo_widget_register () {
 }
 
 function flexo_widget_uninstall () {
-	$options = get_options('widget_flexo');
+	$options = get_option('widget_flexo');
 
 	if (is_array($options)) {
 		delete_option('widget_flexo');

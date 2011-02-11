@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.0.1
+Version: 2.0.2
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 
@@ -30,9 +30,6 @@ Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
  * 
  */
 
-// WP plugin directory
-define('PLUGIN_DIR', 'wp-content/plugins');
-
 // Name of the base JavaScript file
 define('FLEXO_JS', 'flexo.js');
 
@@ -40,8 +37,8 @@ define('FLEXO_JS', 'flexo.js');
 define('FLEXO_ANIM_JS', 'flexo-anim.js');
 
 // Subdirectory of plugins dir where our plugin is to be found
-$exploded_path = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
-define('FLEXO_DIR', $exploded_path[count($exploded_path) - 1]);
+$plugin_dir_basename = basename(dirname(__FILE__));
+define('FLEXO_DIR', $plugin_dir_basename);
 
 
 // Function to register our sidebar widget with WordPress
@@ -118,7 +115,7 @@ function flexo_get_archives () {
 
 // Helper function that prints the url for our javascript
 function flexo_script_url () {
-	$url = get_bloginfo('wpurl') .'/'.  PLUGIN_DIR . '/' . FLEXO_DIR . '/';
+	$url = WP_PLUGIN_URL . '/' . FLEXO_DIR . '/';
 
 	$options = get_option('widget_flexo');
 	if ($options['animate']) {

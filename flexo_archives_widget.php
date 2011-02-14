@@ -41,7 +41,9 @@ $plugin_dir_basename = basename(dirname(__FILE__));
 define('FLEXO_DIR', $plugin_dir_basename);
 
 
-// Function to register our sidebar widget with WordPress
+/**
+ * Function to register our sidebar widget with WordPress
+ */
 function flexo_widget_archives_init () {
 	// Check for required functions
 	if (!function_exists('register_sidebar_widget'))
@@ -51,7 +53,9 @@ function flexo_widget_archives_init () {
 	flexo_widget_register();
 }
 
-// Handle widget configuration
+/**
+ * Handle widget configuration
+ */
 function flexo_widget_archives_control () {
 	$options = $newoptions = get_option('widget_flexo');
 	if ( !empty($_POST["flexo-submit"]) &&
@@ -78,7 +82,9 @@ function flexo_widget_archives_control () {
 <?php
 }
 
-// Helper function to print first bit of year list
+/**
+ * Helper function to print first bit of year list
+ */
 function flexo_year_start ($year = '') {
 	// Ugly strings used in building the tags
 	$year_start = '<ul><li><a href="%s" class="flexo-link" ';
@@ -88,8 +94,12 @@ function flexo_year_start ($year = '') {
 	return sprintf($year_start, get_year_link($year), $year, $year, $year);
 }
 
-// Perform database query to get archives.  Archives are sorted in
-// *descending* order or year and *ascending* order of month
+/**
+ * Perform database query to get archives.  Archives are sorted in
+ * *descending* order or year and *ascending* order of month
+ *
+ * Returns: result of query if successful, null otherwise
+ */
 function flexo_get_archives () {
 	global $wpdb;
 
@@ -113,7 +123,9 @@ function flexo_get_archives () {
 	}
 }
 
-// Helper function that prints the url for our javascript
+/**
+ * Helper function that prints the url for our javascript
+ */
 function flexo_script_url () {
 	$url = WP_PLUGIN_URL . '/' . FLEXO_DIR . '/';
 
@@ -127,7 +139,11 @@ function flexo_script_url () {
 	return $url;
 }
 
-// Munge archive list and print output
+/**
+ * Output the archive list as a sidebar widget
+ *
+ * Arguments: $args array passed by WordPress's widgetized sidebar code
+ */
 function flexo_widget_archives ($args) {
 	global $wp_locale;
 	extract($args);
@@ -178,7 +194,10 @@ function flexo_widget_archives ($args) {
 	echo $after_widget; 
 }
 
-// Register our widgets with the widget system and add a callback to print our CSS
+/**
+ * Register our widgets with the widget system and add a callback to 
+ * print our CSS
+ */
 function flexo_widget_register () {
 	$name = __('Flexo Archives');
 	$desc = __('Your archives as an expandable list of years');
@@ -206,6 +225,9 @@ function flexo_widget_register () {
 	}
 }
 
+/**
+ * Uninstall Function. Deletes plugin configuration from the database.
+ */
 function flexo_widget_uninstall () {
 	$options = get_option('widget_flexo');
 

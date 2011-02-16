@@ -1,3 +1,12 @@
+2011-02-15 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Refactor to enable standalone function.
+		Implement standalone function usable in non-widgetized themes.
+		Add options page to enable standalone function.
+	* readme.txt: Update stable version, description, installation, history.
+
+2011-02-14 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Change comment style to match other plugin.
+
 2011-02-10 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Fixed typo in uninstall function.
 

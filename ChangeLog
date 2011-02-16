@@ -1,3 +1,30 @@
+2011-02-15 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Refactor to enable standalone function.
+		Implement standalone function usable in non-widgetized themes.
+		Add options page to enable standalone function.
+	* readme.txt: Update stable version, description, installation, history.
+
+2011-02-14 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Change comment style to match other plugin.
+
+2011-02-10 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Fixed typo in uninstall function.
+
+2011-02-10 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Use WP_PLUGIN_URL constant to build
+		the script URL instead of determining it ourselves. The 
+		old way was only required for old versions of WordPress.
+
+2011-02-09 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 2.0.1
+
+2011-02-05 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Add nonce field to settings form,
+		nonce check when form submitted.
+
+2011-01-24 Heath Harrelson <heath.harrelson@gmail.com>
+	* readme.txt: Improve wording.
+
 2011-01-23 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 2.0.0
 

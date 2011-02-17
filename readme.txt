@@ -1,18 +1,20 @@
-=== Flexo Archives Widget ===
+=== Flexo Archives ===
 Contributors: heathharrelson
-Donate link: 
+Donate link: http://amzn.com/w/J010ZTQZM654 
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.7
-Tested up to: 3.1 RC3
-Stable tag: 2.0.1
+Tested up to: 3.1-RC4
+Stable tag: 2.0.3
 
 Displays your archives as a compact list of years that expands when clicked, with optional animation.
 
 == Description ==
 
-The Flexo Archives Widget displays your archives as a list of years that expands when clicked (thanks to some JavaScript magic) to show the months with posts. You also have the option to animate the expansion and to display the number of posts in each month.
+Flexo Archives displays your archives as a list of years. When you click a year,it expands to show the months that had posts. You also have the option to animate the expansion.
 
 This widget is designed to be a more compact alternative to the default archives widget supplied with WordPress. If you've been blogging regularly for several years, the list of your archives might be quite long. If you use this widget, though, it will be displayed as a much smaller list of years.
+
+A standalone version that simply prints the HTML for the archive lists and attaches the JavaScript to normal pages is now provided for users who cannot use the widget.
 
 == Installation ==
 
@@ -23,9 +25,15 @@ If your server is cooperative, you can install the widget automatically by going
 1. Download the zip file (`flexo-archives-widget.VERSION.zip`) from the WordPress plugins site.
 1. Expand `flexo-archives-widget.VERSION.zip`
 1. Upload the whole `flexo-archives-widget` directory to the `/wp-content/plugins/` directory.
-1. Activate the Flexo Archives Widget plugin through the 'Plugins' menu in the WordPress admin interface.
-1. To add the widget to your sidebar, go to the widgets panel in your admin interface.
-1. Configure the widget's title and whether expansion is animated and post counts are displayed.
+1. Activate the Flexo Archives plugin through the 'Plugins' menu in the WordPress admin interface.
+1. To add the widget to your sidebar, go to the widgets panel in your admin interface. Drag the widget to the desired widget area of your theme, then configure the widget's title and whether to use animation.
+
+If you need to use the standalone function:
+
+1. Install the plugin automatically or follow steps one through four as above.
+1. From the WordPress dashboard, click the 'Settings' menu (near the bottom of the left column).
+1. Click the 'Flexo Archives' option in the expanded menu.
+1. Enable the standalone function and modify your theme files as described.
 
 == Frequently Asked Questions ==
 
@@ -37,9 +45,17 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Screenshots ==
 
-1. Before and after expansion with the default theme
+1. An expanded archive list and a collapsed archive list.
 
 == ChangeLog ==
+
+= 2.0.3 =
+
+* Added a standalone function for users who can't use the widget.
+
+= 2.0.2 = 
+
+* Fixed a typo in the uninstall function, changed comments. Not released.
 
 = 2.0.1 =
 
@@ -53,6 +69,9 @@ To test whether the problem is your theme, temporarily configure your blog to us
 * Test for WordPress 3.1.
 
 == Upgrade Notice ==
+
+= 2.0.3 =
+Added a standalone function for users who can't use the widget.
 
 == 2.0.1 ==
 Enhanced security.

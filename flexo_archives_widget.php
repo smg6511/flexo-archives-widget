@@ -289,9 +289,11 @@ class FlexoArchives {
 	 * Helper function to print first bit of year list
 	 */
 	function year_start_tags ($year = '') {
+		$link_title = __('Year %s archives', 'flexo-archives');
+
 		// Ugly strings used in building the tags
 		$year_start = '<ul><li><a href="%s" class="flexo-link" ';
-		$year_start .= 'id="flexo-%s"  title="Year %s archives">';
+		$year_start .= 'id="flexo-%s"  title="' . $link_title . '">';
 		$year_start .= '%s</a><ul class="flexo-list">';
 
 		return sprintf($year_start, get_year_link($year), $year, $year, $year);

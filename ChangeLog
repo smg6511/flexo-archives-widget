@@ -1,3 +1,7 @@
+2011-02-18 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Apply archive query filters that may
+		have been set by other plugins.
+
 2011-02-17 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Fix a missed translatable string.
 

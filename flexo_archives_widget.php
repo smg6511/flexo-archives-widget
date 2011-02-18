@@ -308,11 +308,17 @@ class FlexoArchives {
 	function query_archives () {
 		global $wpdb;
 
+		// Support archive filters other plugins may have inserted
+		$join = apply_filters('getarchives_join', '');
+		$default_where = "WHERE post_type='post' AND post_status='publish'";
+		$where = apply_filters('getarchives_where', $default_where);
+
 		// Query string
 		$qstring = "SELECT DISTINCT YEAR(post_date) AS `year`,";
 		$qstring .= " MONTH(post_date) AS `month`,";
-		$qstring .= " count(ID) AS posts FROM  $wpdb->posts";
-		$qstring .= " WHERE post_type='post' AND post_status='publish'";
+		$qstring .= " count(ID) AS posts FROM  $wpdb->posts ";
+		$qstring .= $join . ' ';
+		$qstring .= $where;
 		$qstring .= " GROUP BY YEAR(post_date), MONTH(post_date)";
 		$qstring .= " ORDER BY YEAR(post_date) DESC, MONTH(post_date) ASC";
 

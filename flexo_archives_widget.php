@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.0.3
+Version: 2.1.0
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 
@@ -30,325 +30,467 @@ Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
  * 
  */
 
-// Name of the base JavaScript file
-define('FLEXO_JS', 'flexo.js');
+class FlexoArchives {
+	// Options constants
+	const OPTIONS_NAME = 'widget_flexo';
+	const OPT_STANDALONE = 'standalone'; // bool: standalone func enabled?
+	const OPT_ANIMATE    = 'animate';    // bool: list animation enabled
+	const OPT_COUNT      = 'count';      // bool: post counts in lists
+	const OPT_WTITLE     = 'title';      // string; widget title string
 
-// Name of the animated JavaScript file
-define('FLEXO_ANIM_JS', 'flexo-anim.js');
+	// Filename constants
+	const FLEXO_JS = 'flexo.js';
+	const FLEXO_ANIM_JS = 'flexo-anim.js';
 
-// Subdirectory of plugins dir where our plugin is to be found
-$plugin_dir_basename = basename(dirname(__FILE__));
-define('FLEXO_DIR', $plugin_dir_basename);
+	// Subdirectory where the plugin is located
+	private $flexo_dir;
 
+	// Options array
+	private $options;
 
-/**
- * Function to register our sidebar widget with WordPress
- */
-function flexo_widget_archives_init () {
-	// Check for required functions
-	if (!function_exists('register_sidebar_widget'))
-		return;
-
-	// Call the registration function on init
-	flexo_widget_register();
-}
-
-/**
- * Register the configuration page for the standalone function
- */
-function flexo_archives_menu () {
-	$page_title = __('Standalone Flexo Archives Options');
-	$menu_title = __('Flexo Archives');
-	$menu_slug  = 'flexo-archvies-options';
-
-	add_options_page($page_title, $menu_title, 'manage_options', $menu_slug,
-	                 'flexo_archives_options');
-}
-
-/**
- * Output plugin configuration page
- */
-function flexo_archives_options () {
-	if (!current_user_can('manage_options')) {
-		wp_die(__('You do not have sufficient priveleges to access this page.'));
+	/**
+	 * PHP4 constructor
+ 	 */
+	function FlexoArchives () {
+		return $this->__construct();
 	}
 
-	// form submitted
-	$options = $newoptions = get_option('widget_flexo');
-	if ( !empty($_POST["flexo-submit"]) &&
-	     check_admin_referer('flexo-archives-options-page') )
-	{
-		$newoptions['standalone'] = isset($_POST['flexo-standalone']);
-		$newoptions['animate'] = isset($_POST['flexo-animate']);
+	/**
+	 * PHP5 constructor
+	 */
+	function __construct () {
+		$this->flexo_dir = basename(dirname(__FILE__));
+		$this->initialize();
 	}
 
-	// save if options changed
-	if ( $options != $newoptions ) {
-		$options = $newoptions;
-		update_option('widget_flexo', $options);
+	/**
+	 * Register plugin callbacks with WordPress
+	 */
+	function initialize () {
+		// get translations loaded
+		add_action('init', array(&$this, 'load_translations'));
+
+		// make sure options are initialized
+		$this->set_default_options();
+
+		// register standalone callbacks
+		add_action('init', array(&$this, 'enqueue_standalone_scripts'));
+		add_action('admin_menu', array(&$this, 'options_menu_item'));
+
+		// register widget callbacks
+		add_action('widgets_init', array(&$this, 'widget_init'));
+
+		// register uninstall function
+		register_uninstall_hook(__FILE__, array(&$this, 'uninstall'));
 	}
 
-	$standalone = $options['standalone'] ? 'checked="checked"' : '';
-	$animate = $options['animate'] ? 'checked="checked"' : '';
+	/**
+	 * Sets the default values for unset options
+	 */
+	function set_default_options () {
+		$options = $this->get_opts();
+
+		if (!isset($options[self::OPT_STANDALONE])) {
+			$options[self::OPT_STANDALONE] = false;
+		}
+
+		if (!isset($options[self::OPT_ANIMATE])) {
+			$options[self::OPT_ANIMATE] = true;
+		}
+
+		if (!isset($options[self::OPT_WTITLE])) {
+			$options[self::OPT_WTITLE] = strip_tags(__('Archives', 'flexo-archives'));
+		}
+
+		if (!isset($options[self::OPT_COUNT])) {
+			$options[self::OPT_COUNT] = false;
+		}
+
+		$this->set_opts($options);
+	}
+
+	/**
+	 * Gets the entire options array from the database
+	 * 
+	 * Returns: An array of options. Individual options
+	 * can be accessed by their keys, defined as class
+	 * constants (see above).
+	 */
+	function get_opts () {
+		if (is_null($this->options)) {
+			$this->options = get_option(self::OPTIONS_NAME);
+		}
+		return $this->options;
+	}
+
+	/**
+	 * Save a modified options array to the database
+	 *
+	 * Arguments: An array containing the options. Array
+	 * keys are defined as class constants (see above).
+	 */
+	function set_opts ($newoptions = null) {
+		$options = $this->get_opts();
+		if ($options != $newoptions) {
+			$this->options = $newoptions;
+			update_option(self::OPTIONS_NAME, $newoptions);
+		}
+	}
+
+	/**
+	 * Gets the widget title set in the database
+	 */
+	function widget_title () {
+		$options = $this->get_opts();
+		return attribute_escape($options[self::OPT_WTITLE]);
+	}
+
+	/**
+	 * Reports whether the user enabled post counts
+	 */
+	function count_enabled () {
+		$options = $this->get_opts();
+		return $options[self::OPT_COUNT];
+	}
+
+	/**
+	 * Reports whether standalone archive function is enabled
+	 */
+	function standalone_enabled () {
+		$options = $this->get_opts();
+		return $options[self::OPT_STANDALONE];
+	}
+
+	/**
+	 * Reports whether list animation is enabled
+	 */
+	function animation_enabled () {
+		$options = $this->get_opts();
+		return $options[self::OPT_ANIMATE];
+	}
+
+	/**
+	 * Loads translated strings from catalogs in ./lang
+	 */
+	function load_translations () {
+		$lang_dir = $this->flexo_dir . '/lang';
+		load_plugin_textdomain('flexo-archives', null, $lang_dir);
+	}
+
+	/**
+	 * Function to register our sidebar widget with WordPress
+	 */
+	function widget_init () {
+		// Check for required functions
+		if (!function_exists('wp_register_sidebar_widget'))
+			return;
+
+		// Call the registration function on init
+		$this->register_widget();
+	}
+
+	/**
+	 * Register the configuration page for the standalone function
+	 */
+	function options_menu_item () {
+		$page_title = __('Standalone Flexo Archives Options', 'flexo-archives');
+		$menu_title = __('Flexo Archives', 'flexo-archives');
+		$menu_slug  = 'flexo-archvies-options';
+
+		add_options_page($page_title, $menu_title, 'manage_options',
+				 $menu_slug, array(&$this, 'options_page'));
+	}
+
+	/**
+	 * Output plugin configuration page
+	 */
+	function options_page () {
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have sufficient priveleges to access this page.', 'flexo-archives'));
+		}
+
+		// form submitted
+		$options = $newoptions = $this->get_opts();
+		if ( !empty($_POST["flexo-submit"]) &&
+		     check_admin_referer('flexo-archives-options-page') )
+		{
+			$newoptions[self::OPT_STANDALONE] = isset($_POST['flexo-standalone']);
+			$newoptions[self::OPT_ANIMATE] = isset($_POST['flexo-animate']);
+			$newoptions[self::OPT_COUNT] = isset($_POST['flexo-count']);
+		}
+
+		// save if options changed
+		if ($options != $newoptions) {
+			$options = $newoptions;
+			$this->set_opts($options);
+		}
+
+		$standalone = $this->standalone_enabled() ? 'checked="checked"' : '';
+		$animate = $this->animation_enabled() ? 'checked="checked"' : '';
+		$count = $this->count_enabled() ? 'checked="checked"' : '';
 
 ?>
 <div class="wrap">
-  <h2><?php _e('Standalone Flexo Archives Options'); ?></h2>
+  <h2><?php _e('Standalone Flexo Archives Options', 'flexo-archives'); ?></h2>
   <div class="narrow">
-  <p><?php _e('These options are only relevant to users who cannot use or do not want to use the sidebar widget. If you are using the widget, then you should ignore the following settings.'); ?></p>
-  <p><?php _e('To use the standalone version of the archives, check the "enable standalone theme function" box below, and then add the following code your theme where you want the expandable archive lists to be:'); ?></p>
+  <p><?php _e('These options are only relevant to users who cannot use or do not want to use the sidebar widget. If you are using the widget, then you should ignore the following settings.', 'flexo-archives'); ?></p>
+  <p><?php _e('To use the standalone version of the archives, check the "enable standalone theme function" box below, and then add the following code your theme where you want the expandable archive lists to be:', 'flexo-archives'); ?></p>
 
   <code>&lt;?php if (function_exists('flexo_standalone_archives')){ flexo_standalone_archives(); } ?&gt;</code>
 
-  <p><?php _e('The code will output the nested archive lists into the HTML at that point in the theme. JavaScript automatically attached to the pages generated by WordPress will make the lists expand and collapse.'); ?></p>
+  <p><?php _e('The code will output the nested archive lists into the HTML at that point in the theme. JavaScript automatically attached to the pages generated by WordPress will make the lists expand and collapse.', 'flexo-archives'); ?></p>
 
-  <h3><?php _e('Change Options'); ?></h3>
+  <h3><?php _e('Change Options', 'flexo-archives'); ?></h3>
 
   <form name="flexo-options-form" method="post" action="">
     <?php wp_nonce_field('flexo-archives-options-page'); ?>
-    <p><label for="flexo-standalone"><input type="checkbox" class="checkbox" id="flexo-standalone" name="flexo-standalone" <?php echo $standalone; ?>/> <?php _e('enable standalone theme function'); ?></label></p>
-    <p><label for="flexo-animate"><input type="checkbox" class="checkbox" id="flexo-animate" name="flexo-animate" <?php echo $animate; ?>/> <?php _e('animate collapsing and expanding lists'); ?></label></p>
-    <input type="submit" name="flexo-submit" class="button-primary" value="<?php _e('Submit'); ?>"/>
+    <p><label for="flexo-standalone"><input type="checkbox" class="checkbox" id="flexo-standalone" name="flexo-standalone" <?php echo $standalone; ?>/> <?php _e('enable standalone theme function', 'flexo-archives'); ?></label></p>
+    <p><label for="flexo-animate"><input type="checkbox" class="checkbox" id="flexo-animate" name="flexo-animate" <?php echo $animate; ?>/> <?php _e('animate collapsing and expanding lists', 'flexo-archives'); ?></label></p>
+    <p><label for="flexo-count"><input type="checkbox" class="checkbox" id="flexo-count" name="flexo-count" <?php echo $count; ?>/> <?php _e('include post counts in lists', 'flexo-archives'); ?></label></p>
+    <input type="submit" name="flexo-submit" class="button-primary" value="<?php _e('Submit', 'flexo-archives'); ?>"/>
   </form>
   </div>
 </div>
 <?php
-}
-
-/**
- * Handle widget configuration
- */
-function flexo_widget_archives_control () {
-	$options = $newoptions = get_option('widget_flexo');
-	if ( !empty($_POST["flexo-submit"]) &&
-	     check_admin_referer('flexo-archives-widget-options') )
-	{
-		$newoptions['count'] = isset($_POST['flexo-count']);
-		$newoptions['animate'] = isset($_POST['flexo-animate']);
-		$newoptions['title'] = strip_tags(stripslashes($_POST["flexo-title"]));
 	}
-	if ( $options != $newoptions ) {
-		$options = $newoptions;
-		update_option('widget_flexo', $options);
-	}
-	$count = $options['count'] ? 'checked="checked"' : '';
-	$animate = $options['animate'] ? 'checked="checked"' : '';
-	$title = attribute_escape($options['title']);
 
-	wp_nonce_field('flexo-archives-widget-options');
-?>
-		<p><label for="flexo-title"><?php _e('Title:'); ?> <input style="width: 90%;" id="flexo-title" name="flexo-title" type="text" value="<?php echo $title; ?>" /></label></p>
-		<p style="text-align:right;margin-right:40px;"><label for="flexo-animate"><?php _e('Animate lists'); ?> <input class="checkbox" type="checkbox" <?php echo $animate; ?> id="flexo-animate" name="flexo-animate"/></label></p>
-		<p style="text-align:right;margin-right:40px;"><label for="flexo-count"><?php _e('Show post counts'); ?> <input class="checkbox" type="checkbox" <?php echo $count; ?> id="flexo-count" name="flexo-count"/></label></p>
-		<input type="hidden" id="flexo-submit" name="flexo-submit" value="1" />
-<?php
-}
-
-/**
- * Helper function to print first bit of year list
- */
-function flexo_year_start ($year = '') {
-	// Ugly strings used in building the tags
-	$year_start = '<ul><li><a href="%s" class="flexo-link" ';
-	$year_start .= 'id="flexo-%s"  title="Year %s archives">';
-	$year_start .= '%s</a><ul class="flexo-list">';
-
-	return sprintf($year_start, get_year_link($year), $year, $year, $year);
-}
-
-/**
- * Perform database query to get archives.  Archives are sorted in
- * *descending* order or year and *ascending* order of month
- *
- * Returns: result of query if successful, null otherwise
- */
-function flexo_query_archives () {
-	global $wpdb;
-
-	// Query string
-	$qstring = "SELECT DISTINCT YEAR(post_date) AS `year`,";
-	$qstring .= " MONTH(post_date) AS `month`,";
-	$qstring .= " count(ID) AS posts FROM  $wpdb->posts";
-	$qstring .= " WHERE post_type = 'post' AND post_status = 'publish'";
-	$qstring .= " GROUP BY YEAR(post_date), MONTH(post_date)";
-	$qstring .= " ORDER BY YEAR(post_date) DESC, MONTH(post_date) ASC";
-
-	// Query database
-	$flexo_results = $wpdb->get_results($qstring);
-
-	// Check we actually got results
-	if ($flexo_results) {
-		return $flexo_results;
-	} else {
-		// No results or database error
-		return false;
-	}
-}
-
-/**
- * Constructs the nested unordered lists from data obtained from
- * the database.
- *
- * Returns: An HTML fragment containing the archives lists
- */
-function flexo_build_archives_list () {
-	global $wp_locale;
-	$list_html = "";
-
-	// Get archives from database
-	$results = flexo_query_archives();
-
-	// Log and retrun an error if query failed.
-	if (is_null($results)) {
-		$error_str = __('Database query unexpectedly failed.');
-		error_log(__('ERROR: ') . __FILE__ . '(' . __LINE__ . ') ' .
-			  $error_str);
-		return "<p>$error_str</p>";
-	}
-	
-	// Detect year change in loop.
-	$a_year = '0';
-
-	// Loop over results and print our archive lists
-	foreach ($results as $a_result) {
-		$before = '';
-		$after = '';
-
-		if ($a_result->year != $a_year) {
-			// If not first iteration, close previous list
-			if ($a_year != '0')
-				$list_html .= '</ul></li></ul>';
-
-			$a_year = $a_result->year;
-			$list_html .= flexo_year_start($a_result->year) . "\n";
+	/**
+	 * Handle widget configuration
+	 */
+	function widget_control () {
+		$options = $newoptions = $this->get_opts();
+		if ( !empty($_POST["flexo-submit"]) &&
+		     check_admin_referer('flexo-archives-widget-options') )
+		{
+			$newoptions[self::OPT_COUNT] = isset($_POST['flexo-count']);
+			$newoptions[self::OPT_ANIMATE] = isset($_POST['flexo-animate']);
+			$newoptions[self::OPT_WTITLE] = strip_tags(stripslashes($_POST["flexo-title"]));
 		}
 
-		$url = get_month_link($a_result->year, $a_result->month);
-		$text = sprintf(__('%1$s'), $wp_locale->get_month($a_result->month));
+		if ($options != $newoptions) {
+			$options = $newoptions;
+			$this->set_opts($options);
+		}
 
-		// Append number of posts in month, if they want it
-		if ($count)
-			$after = '&nbsp;(' . $a_result->posts . ')' . $after;
+		$count = $this->count_enabled() ? 'checked="checked"' : '';
+		$animate = $this->animation_enabled() ? 'checked="checked"' : '';
+		$title = $this->widget_title();
 
-		$list_html .= get_archives_link($url, $text, 'html', $before, $after);
+		wp_nonce_field('flexo-archives-widget-options');
+?>
+  <p><label for="flexo-title"><?php _e('Title:', 'flexo-archives'); ?> <input style="width: 90%;" id="flexo-title" name="flexo-title" type="text" value="<?php echo $title; ?>" /></label></p>
+  <p style="text-align:right;margin-right:40px;"><label for="flexo-animate"><?php _e('Animate lists', 'flexo-archives'); ?> <input class="checkbox" type="checkbox" <?php echo $animate; ?> id="flexo-animate" name="flexo-animate"/></label></p>
+  <p style="text-align:right;margin-right:40px;"><label for="flexo-count"><?php _e('Show post counts', 'flexo-archives'); ?> <input class="checkbox" type="checkbox" <?php echo $count; ?> id="flexo-count" name="flexo-count"/></label></p>
+  <input type="hidden" id="flexo-submit" name="flexo-submit" value="1" />
+<?php
 	}
 
-	// Close the last list
-	$list_html .= '</ul></li></ul>';
+	/**
+	 * Helper function to print first bit of year list
+	 */
+	function year_start_tags ($year = '') {
+		$link_title = __('Year %s archives', 'flexo-archives');
 
-	return $list_html;
+		// Ugly strings used in building the tags
+		$year_start = '<ul><li><a href="%s" class="flexo-link" ';
+		$year_start .= 'id="flexo-%s"  title="' . $link_title . '">';
+		$year_start .= '%s</a><ul class="flexo-list">';
+
+		return sprintf($year_start, get_year_link($year), $year, $year, $year);
+	}
+
+	/**
+	 * Perform database query to get archives.  Archives are sorted in
+	 * *descending* order or year and *ascending* order of month
+	 *
+	 * Returns: result of query if successful, null otherwise
+	 */
+	function query_archives () {
+		global $wpdb;
+
+		// Support archive filters other plugins may have inserted
+		$join = apply_filters('getarchives_join', '');
+		$default_where = "WHERE post_type='post' AND post_status='publish'";
+		$where = apply_filters('getarchives_where', $default_where);
+
+		// Query string
+		$qstring = "SELECT DISTINCT YEAR(post_date) AS `year`,";
+		$qstring .= " MONTH(post_date) AS `month`,";
+		$qstring .= " count(ID) AS posts FROM  $wpdb->posts ";
+		$qstring .= $join . ' ';
+		$qstring .= $where;
+		$qstring .= " GROUP BY YEAR(post_date), MONTH(post_date)";
+		$qstring .= " ORDER BY YEAR(post_date) DESC, MONTH(post_date) ASC";
+
+		// Query database
+		$flexo_results = $wpdb->get_results($qstring);
+
+		// Check we actually got results
+		if ($flexo_results) {
+			return $flexo_results;
+		} else {
+			// No results or database error
+			return null;
+		}
+	}
+
+	/**
+	 * Constructs the nested unordered lists from data obtained from
+	 * the database.
+	 *
+	 * Returns: An HTML fragment containing the archives lists
+	 */
+	function build_archives_list ($count = false) {
+		global $wp_locale;
+		$list_html = "";
+
+		// Get archives from database
+		$results = $this->query_archives();
+
+		// Log and retrun an error if query failed.
+		if (is_null($results)) {
+			$error_str = __('Database query unexpectedly failed.', 'flexo-archives');
+			error_log(__('ERROR: ', 'flexo-archives') . __FILE__ . 
+				  '(' . __LINE__ . ') ' .  $error_str);
+			return "<p>$error_str</p>";
+		}
+		
+		// Detect year change in loop.
+		$a_year = '0';
+
+		// Loop over results and print our archive lists
+		foreach ($results as $a_result) {
+			$before = '';
+			$after = '';
+
+			if ($a_result->year != $a_year) {
+				// If not first iteration, close previous list
+				if ($a_year != '0')
+					$list_html .= '</ul></li></ul>';
+
+				$a_year = $a_result->year;
+				$list_html .= $this->year_start_tags($a_result->year) . "\n";
+			}
+
+			$url = get_month_link($a_result->year, $a_result->month);
+			$text = sprintf(__('%1$s'), $wp_locale->get_month($a_result->month));
+
+			// Append number of posts in month, if they want it
+			if ($count)
+				$after = '&nbsp;(' . $a_result->posts . ')' . $after;
+
+			$list_html .= get_archives_link($url, $text, 'html', $before, $after);
+		}
+
+		// Close the last list
+		$list_html .= '</ul></li></ul>';
+
+		return $list_html;
+	}
+
+	/**
+	 * Output the archive list as a sidebar widget
+	 *
+	 * Arguments: $args array passed by WordPress's widgetized
+	 * sidebar code
+	 */
+	function widget_archives ($args) {
+		extract($args);
+
+		// Fetch widget options
+		$title = $this->widget_title();
+		$count = $this->count_enabled();
+
+		// Print out the title
+		echo $before_widget; 
+		echo $before_title . $title . $after_title;
+
+		// Print out the archive list
+		echo $this->build_archives_list($count);
+
+		// Close out the widget
+		echo $after_widget; 
+	}
+
+	/**
+	 * Attach JavaScript to normal pages if the standalone archives
+	 * function is enabled
+	 */
+	function enqueue_standalone_scripts () {
+		if (!is_admin() && $this->standalone_enabled()) {
+			wp_enqueue_script('jquery');
+			wp_enqueue_script('flexo', $this->script_url(), array('jquery'),
+					  '2.0');
+		}
+	}
+
+	/**
+	 * Helper function that prints the url for our javascript
+	 */
+	function script_url () {
+		$url = WP_PLUGIN_URL . '/' . $this->flexo_dir . '/';
+
+		if ($this->animation_enabled()) {
+			$url .= self::FLEXO_ANIM_JS;
+		} else {
+			$url .= self::FLEXO_JS;
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Register our widgets with the widget system and add a
+	 * callback to print our CSS
+	 */
+	function register_widget () {
+		$name = __('Flexo Archives', 'flexo-archives');
+		$desc = __('Your archives as an expandable list of years', 'flexo-archives');
+		$widget_cb = array(&$this, 'widget_archives');
+		$control_cb = array(&$this, 'widget_control');
+		$css_class = 'flexo';
+
+		// Tell the dynamic sidebar about our widget
+		if (function_exists('wp_register_sidebar_widget')) {
+			$widget_ops = array('class' => $css_class, 'description' => $desc);
+			$control_ops = array('width' => 250, 'height' => 100, 'id_base' => 'flexo-archives');
+			$id = 'flexo-archives'; // Never never never translate an id
+
+			wp_register_sidebar_widget($id, $name, $widget_cb, $widget_ops);
+			wp_register_widget_control($id, $name, $control_cb, $control_ops);
+		}
+
+		// Add CSS and JavaScript to header if we're active
+		if (is_active_widget(array(&$this, 'widget_archives'))) {
+			wp_enqueue_script('jquery');
+			wp_enqueue_script('flexo', $this->script_url(), array('jquery'), '2.0');
+		}
+	}
+
+	/**
+	 * Uninstall Function. Deletes plugin configuration from the
+	 * database.
+	 */
+	function uninstall () {
+		$options = $this->get_opts();
+
+		if (is_array($options)) {
+			delete_option(self::OPTIONS_NAME);
+		}
+	}
 }
 
 /**
- * Output the archive list as a sidebar widget
- *
- * Arguments: $args array passed by WordPress's widgetized sidebar code
- */
-function flexo_widget_archives ($args) {
-	extract($args);
-
-	// Fetch widget options
-	$options = get_option('widget_flexo');
-	$title = empty($options['title']) ? __('Archives') : $options['title'];
-	$count = $options['count'] ? '1' : '0';
-
-	// Print out the title
-	echo $before_widget; 
-	echo $before_title . $title . $after_title;
-
-	// Print out the archive list
-	echo flexo_build_archives_list();
-
-	// Close out the widget
-	echo $after_widget; 
-}
-
-/**
- * Attach JavaScript to normal pages if the standalone archives function
- * is enabled
- */
-function flexo_enqueue_standalone () {
-	$options = get_option('widget_flexo');
-
-	if (is_null($options['standalone'])) {
-		$options['standalone'] = false;
-	}
-
-	if (!is_admin() && $options['standalone']) {
-		wp_enqueue_script('jquery');
-		wp_enqueue_script('flexo', flexo_script_url(), array('jquery'),
-				  '2.0');
-	}
-}
-
-/**
- * Output the archive lists as a standalone function
+ * Output the archive lists as a standalone function, for users
+ * can't or don't want to use the widget.
  */
 function flexo_standalone_archives () {
-	echo flexo_build_archives_list();
-}
+	$archives = new FlexoArchives();
 
-/**
- * Helper function that prints the url for our javascript
- */
-function flexo_script_url () {
-	$url = WP_PLUGIN_URL . '/' . FLEXO_DIR . '/';
-
-	$options = get_option('widget_flexo');
-	if ($options['animate']) {
-		$url .= FLEXO_ANIM_JS;
-	} else {
-		$url .= FLEXO_JS;
-	}
-
-	return $url;
-}
-
-/**
- * Register our widgets with the widget system and add a callback to 
- * print our CSS
- */
-function flexo_widget_register () {
-	$name = __('Flexo Archives');
-	$desc = __('Your archives as an expandable list of years');
-	$widget_cb = 'flexo_widget_archives';
-	$control_cb = 'flexo_widget_archives_control';
-	$css_class = 'flexo';
-
-	// Tell the dynamic sidebar about our widget
-	if (function_exists('wp_register_sidebar_widget')) {
-		$widget_ops = array('class' => $css_class, 'description' => $desc);
-		$control_ops = array('width' => 250, 'height' => 100, 'id_base' => 'flexo-archives');
-		$id = 'flexo-archives'; // Never never never translate an id
-
-		wp_register_sidebar_widget($id, $name, $widget_cb, $widget_ops);
-		wp_register_widget_control($id, $name, $control_cb, $control_ops);
-	}
-
-	// Register the function to delete options on uninstall
-	register_uninstall_hook(__FILE__, 'flexo_archives_uninstall');
-
-	// Add CSS and JavaScript to header if we're active
-	if (is_active_widget('flexo_widget_archives')) {
-		wp_enqueue_script('jquery');
-		wp_enqueue_script('flexo', flexo_script_url(), array('jquery'), '2.0');
+	if ($archives->standalone_enabled()) {
+		echo $archives->build_archives_list($archives->count_enabled());
 	}
 }
 
-/**
- * Uninstall Function. Deletes plugin configuration from the database.
- */
-function flexo_archives_uninstall () {
-	$options = get_option('widget_flexo');
-
-	if (is_array($options)) {
-		delete_option('widget_flexo');
-	}
-}
-
-// Delay plugin execution until sidebar is loaded
-add_action('init', 'flexo_enqueue_standalone');
-add_action('admin_menu', 'flexo_archives_menu');
-add_action('widgets_init', 'flexo_widget_archives_init');
-
+$flexo_archives = & new FlexoArchives();
 ?>

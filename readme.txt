@@ -47,7 +47,7 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 1. An expanded archive list and a collapsed archive list.
 
-== ChangeLog ==
+== Changelog ==
 
 = 2.1.0 =
 
@@ -78,15 +78,12 @@ To test whether the problem is your theme, temporarily configure your blog to us
 == Upgrade Notice ==
 
 = 2.1.0 =
-Reimplemented as a class.
-Fixed issue where users of the standalone function couldn't enable post counts.
-Play nice with the getarchives_where and getarchives_join filters.
-Initial internationalization support.
+Fixed an issue with the standalone function and added initial internationalization support. Users of the standalone function or wishing to localize the plugin should upgrade.
 
 = 2.0.3 =
 Added a standalone function for users who can't use the widget.
 
-== 2.0.1 ==
+= 2.0.1 =
 Enhanced security.
 
 = 2.0.0 =

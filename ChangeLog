@@ -1,4 +1,7 @@
 2011-02-18 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 2.1.0
+
+2011-02-18 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Enable i18n initialization.
 	* lang/flexo-archives-widget.pot: Initial gettext template.
 

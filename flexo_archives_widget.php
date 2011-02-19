@@ -67,8 +67,8 @@ class FlexoArchives {
 	 * Register plugin callbacks with WordPress
 	 */
 	function initialize () {
-		// get translations loaded FIXME
-		//add_action('init', array(&$this, 'load_translations'));
+		// get translations loaded
+		add_action('init', array(&$this, 'load_translations'));
 
 		// make sure options are initialized
 		$this->set_default_options();

@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.1.0
+Version: 2.1.1
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 
@@ -32,21 +32,21 @@ Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 
 class FlexoArchives {
 	// Options constants
-	const OPTIONS_NAME = 'widget_flexo';
-	const OPT_STANDALONE = 'standalone'; // bool: standalone func enabled?
-	const OPT_ANIMATE    = 'animate';    // bool: list animation enabled
-	const OPT_COUNT      = 'count';      // bool: post counts in lists
-	const OPT_WTITLE     = 'title';      // string; widget title string
+	var $OPTIONS_NAME = 'widget_flexo';
+	var $OPT_STANDALONE = 'standalone'; // bool: standalone func enabled?
+	var $OPT_ANIMATE    = 'animate';    // bool: list animation enabled
+	var $OPT_COUNT      = 'count';      // bool: post counts in lists
+	var $OPT_WTITLE     = 'title';      // string; widget title string
 
 	// Filename constants
-	const FLEXO_JS = 'flexo.js';
-	const FLEXO_ANIM_JS = 'flexo-anim.js';
+	var $FLEXO_JS = 'flexo.js';
+	var $FLEXO_ANIM_JS = 'flexo-anim.js';
 
 	// Subdirectory where the plugin is located
-	private $flexo_dir;
+	var $flexo_dir;
 
 	// Options array
-	private $options;
+	var $options;
 
 	/**
 	 * PHP4 constructor
@@ -90,20 +90,20 @@ class FlexoArchives {
 	function set_default_options () {
 		$options = $this->get_opts();
 
-		if (!isset($options[self::OPT_STANDALONE])) {
-			$options[self::OPT_STANDALONE] = false;
+		if (!isset($options[$this->OPT_STANDALONE])) {
+			$options[$this->OPT_STANDALONE] = false;
 		}
 
-		if (!isset($options[self::OPT_ANIMATE])) {
-			$options[self::OPT_ANIMATE] = true;
+		if (!isset($options[$this->OPT_ANIMATE])) {
+			$options[$this->OPT_ANIMATE] = true;
 		}
 
-		if (!isset($options[self::OPT_WTITLE])) {
-			$options[self::OPT_WTITLE] = strip_tags(__('Archives', 'flexo-archives'));
+		if (!isset($options[$this->OPT_WTITLE])) {
+			$options[$this->OPT_WTITLE] = strip_tags(__('Archives', 'flexo-archives'));
 		}
 
-		if (!isset($options[self::OPT_COUNT])) {
-			$options[self::OPT_COUNT] = false;
+		if (!isset($options[$this->OPT_COUNT])) {
+			$options[$this->OPT_COUNT] = false;
 		}
 
 		$this->set_opts($options);
@@ -118,7 +118,7 @@ class FlexoArchives {
 	 */
 	function get_opts () {
 		if (is_null($this->options)) {
-			$this->options = get_option(self::OPTIONS_NAME);
+			$this->options = get_option($this->OPTIONS_NAME);
 		}
 		return $this->options;
 	}
@@ -133,7 +133,7 @@ class FlexoArchives {
 		$options = $this->get_opts();
 		if ($options != $newoptions) {
 			$this->options = $newoptions;
-			update_option(self::OPTIONS_NAME, $newoptions);
+			update_option($this->OPTIONS_NAME, $newoptions);
 		}
 	}
 
@@ -142,7 +142,7 @@ class FlexoArchives {
 	 */
 	function widget_title () {
 		$options = $this->get_opts();
-		return attribute_escape($options[self::OPT_WTITLE]);
+		return attribute_escape($options[$this->OPT_WTITLE]);
 	}
 
 	/**
@@ -150,7 +150,7 @@ class FlexoArchives {
 	 */
 	function count_enabled () {
 		$options = $this->get_opts();
-		return $options[self::OPT_COUNT];
+		return $options[$this->OPT_COUNT];
 	}
 
 	/**
@@ -158,7 +158,7 @@ class FlexoArchives {
 	 */
 	function standalone_enabled () {
 		$options = $this->get_opts();
-		return $options[self::OPT_STANDALONE];
+		return $options[$this->OPT_STANDALONE];
 	}
 
 	/**
@@ -166,7 +166,7 @@ class FlexoArchives {
 	 */
 	function animation_enabled () {
 		$options = $this->get_opts();
-		return $options[self::OPT_ANIMATE];
+		return $options[$this->OPT_ANIMATE];
 	}
 
 	/**
@@ -214,9 +214,9 @@ class FlexoArchives {
 		if ( !empty($_POST["flexo-submit"]) &&
 		     check_admin_referer('flexo-archives-options-page') )
 		{
-			$newoptions[self::OPT_STANDALONE] = isset($_POST['flexo-standalone']);
-			$newoptions[self::OPT_ANIMATE] = isset($_POST['flexo-animate']);
-			$newoptions[self::OPT_COUNT] = isset($_POST['flexo-count']);
+			$newoptions[$this->OPT_STANDALONE] = isset($_POST['flexo-standalone']);
+			$newoptions[$this->OPT_ANIMATE] = isset($_POST['flexo-animate']);
+			$newoptions[$this->OPT_COUNT] = isset($_POST['flexo-count']);
 		}
 
 		// save if options changed
@@ -262,9 +262,9 @@ class FlexoArchives {
 		if ( !empty($_POST["flexo-submit"]) &&
 		     check_admin_referer('flexo-archives-widget-options') )
 		{
-			$newoptions[self::OPT_COUNT] = isset($_POST['flexo-count']);
-			$newoptions[self::OPT_ANIMATE] = isset($_POST['flexo-animate']);
-			$newoptions[self::OPT_WTITLE] = strip_tags(stripslashes($_POST["flexo-title"]));
+			$newoptions[$this->OPT_COUNT] = isset($_POST['flexo-count']);
+			$newoptions[$this->OPT_ANIMATE] = isset($_POST['flexo-animate']);
+			$newoptions[$this->OPT_WTITLE] = strip_tags(stripslashes($_POST["flexo-title"]));
 		}
 
 		if ($options != $newoptions) {
@@ -431,9 +431,9 @@ class FlexoArchives {
 		$url = WP_PLUGIN_URL . '/' . $this->flexo_dir . '/';
 
 		if ($this->animation_enabled()) {
-			$url .= self::FLEXO_ANIM_JS;
+			$url .= $this->FLEXO_ANIM_JS;
 		} else {
-			$url .= self::FLEXO_JS;
+			$url .= $this->FLEXO_JS;
 		}
 
 		return $url;
@@ -475,7 +475,7 @@ class FlexoArchives {
 		$options = $this->get_opts();
 
 		if (is_array($options)) {
-			delete_option(self::OPTIONS_NAME);
+			delete_option($this->OPTIONS_NAME);
 		}
 	}
 }

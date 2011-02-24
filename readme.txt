@@ -4,7 +4,7 @@ Donate link: http://amzn.com/w/J010ZTQZM654
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.7
 Tested up to: 3.1-RC4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 
 Displays your archives as a compact list of years that expands when clicked, with optional animation.
 
@@ -49,6 +49,10 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Changelog ==
 
+= 2.1.1 =
+
+* Restores compatibility with PHP4. Sorry about that. :(
+
 = 2.1.0 =
 
 * Reimplemented as a class.
@@ -76,6 +80,9 @@ To test whether the problem is your theme, temporarily configure your blog to us
 * Test for WordPress 3.1.
 
 == Upgrade Notice ==
+
+= 2.1.1 =
+Fixes PHP4 incompatibility. PHP4 users must upgrade.
 
 = 2.1.0 =
 Fixed an issue with the standalone function and added initial internationalization support. Users of the standalone function or wishing to localize the plugin should upgrade.

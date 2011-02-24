@@ -1,3 +1,6 @@
+2011-02-23 Heath Harrelson <heath.harrelson@gmail.com>
+	* Tag verison 2.1.1
+
 2011-02-22 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Possible fix to unbreak PHP4 sites.
 

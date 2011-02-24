@@ -4,7 +4,7 @@ Donate link: http://amzn.com/w/J010ZTQZM654
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.7
 Tested up to: 3.1-RC4
-Stable tag: 2.0.3
+Stable tag: 2.1.1
 
 Displays your archives as a compact list of years that expands when clicked, with optional animation.
 
@@ -45,9 +45,20 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Screenshots ==
 
-1. An expanded archive list and several collapsed archive lists.
+1. An expanded archive list and a collapsed archive list.
 
-== ChangeLog ==
+== Changelog ==
+
+= 2.1.1 =
+
+* Restores compatibility with PHP4. Sorry about that. :(
+
+= 2.1.0 =
+
+* Reimplemented as a class.
+* Fixed issue where users of the standalone function couldn't enable post counts.
+* Play nice with the getarchives_where and getarchives_join filters.
+* Initial internationalization support.
 
 = 2.0.3 =
 
@@ -70,11 +81,17 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Upgrade Notice ==
 
+= 2.1.1 =
+Fixes PHP4 incompatibility. PHP4 users must upgrade.
+
+= 2.1.0 =
+Fixed an issue with the standalone function and added initial internationalization support. Users of the standalone function or wishing to localize the plugin should upgrade.
+
 = 2.0.3 =
 Added a standalone function for users who can't use the widget.
 
-== 2.0.1 ==
+= 2.0.1 =
 Enhanced security.
 
 = 2.0.0 =
-Adds animation when the list is expanded / contracted.
+Adds animation when the list is expanded / collapsed.

@@ -1,4 +1,7 @@
 2011-03-01 Heath Harrelson <heath.harrelson@gmail.com>
+	* lang/flexo-archives-widget.pot: Update to reflect recent changes.
+
+2011-03-01 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Add multi-widget support.
 		Add ability to put rel="nofollow" in links.
 		Reorganize options page to reflect new settings.

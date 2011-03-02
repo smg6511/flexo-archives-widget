@@ -1,5 +1,11 @@
+2011-03-01 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Add multi-widget support.
+		Add ability to put rel="nofollow" in links.
+		Reorganize options page to reflect new settings.
+	* flexo-admin-style.css: New style sheet for the settings page.
+
 2011-02-23 Heath Harrelson <heath.harrelson@gmail.com>
-	* Tag verison 2.1.1
+	Tag verison 2.1.1
 
 2011-02-22 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo_archives_widget.php: Possible fix to unbreak PHP4 sites.
@@ -122,7 +128,7 @@
 
 2007-10-20 Heath Harrelson <heath.harrelson@gmail.com>
 	* flexo.js: Bugfix for themes that don't set the ID of the 
-		widget's root element.  We previously just refused
+		widget's root element.	We previously just refused
 		to work, but now we find the widget's root using the
 		flexo links.
 	* flexo_archives_widget.php: Bump version prior to tag.

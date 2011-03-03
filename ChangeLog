@@ -1,5 +1,9 @@
-2011-03-02 Heath Harrelson <heath.harrelson@gmail.com>
+2011-03-03 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 2.1.2
+
+2011-03-03 Heath Harrelson <heath.harrelson@gmail.com>
+	* lang/flexo-archives-widget_nl_NL.po: Dutch translation from Dylan.
+	* lang/flexo-archives-widget_nl_NL.mo: Dutch translation from Dylan.
 
 2011-03-01 Heath Harrelson <heath.harrelson@gmail.com>
 	* lang/flexo-archives-widget.pot: Update to reflect recent changes.

@@ -4,7 +4,7 @@ Donate link: http://amzn.com/w/J010ZTQZM654
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.7
 Tested up to: 3.1
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 
 Displays your archives as a compact list of years that expands when clicked, with optional animation.
 
@@ -53,6 +53,7 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 * Adds support for having multiple widgets.
 * By user request, adds the option to add rel="nofollow" to links.
+* Dutch translation.
 
 = 2.1.1 =
 
@@ -87,7 +88,7 @@ To test whether the problem is your theme, temporarily configure your blog to us
 == Upgrade Notice ==
 
 = 2.1.2 =
-This is a major upgrade that adds support for multiple Flexo widgets.
+This is a major upgrade that adds support for multiple Flexo widgets. Dutch translation also added.
 
 = 2.1.1 =
 Fixes PHP4 incompatibility introduced by 2.1.0. PHP4 users must upgrade.

@@ -41,7 +41,7 @@ class FlexoArchives {
     var $OPT_COUNT      = 'count';      // bool: post counts in lists
     var $OPT_COUNT_STANDALONE = 'standalone-count';
     var $OPT_WTITLE     = 'title';      // string; widget title string
-    var $OPT_CONVERTED  = '4096';  // array: converted non-multi widget settings
+    var $OPT_CONVERTED  = '2';  // array: converted non-multi widget settings
 
     // Filename constants
     var $FLEXO_JS = 'flexo.js';

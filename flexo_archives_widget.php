@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.1.2
+Version: 2.1.3
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 
@@ -42,6 +42,7 @@ class FlexoArchives {
     var $OPT_COUNT_STANDALONE = 'standalone-count';
     var $OPT_WTITLE     = 'title';      // string; widget title string
     var $OPT_CONVERTED  = '2';  // array: converted non-multi widget settings
+    var $OPT_MONTH_DESC = 'month-descend'; // bool: order months descending
 
     // Filename constants
     var $FLEXO_JS = 'flexo.js';
@@ -99,24 +100,19 @@ class FlexoArchives {
     function set_default_options () {
         $options = $this->get_opts();
 
-        // global option: standalone function disabled
-        if (!isset($options[$this->OPT_STANDALONE])) {
-            $options[$this->OPT_STANDALONE] = false;
-        }
+        $global_defaults = array(
+                            $this->OPT_ANIMATE => true,
+                            $this->OPT_NOFOLLOW => false,
+                            $this->OPT_MONTH_DESC => false,
+                            $this->OPT_STANDALONE => false,
+                            $this->OPT_COUNT_STANDALONE => false
+                          );
 
-        // global option: animate expansion of archive lists
-        if (!isset($options[$this->OPT_ANIMATE])) {
-            $options[$this->OPT_ANIMATE] = true;
-        }
-
-        // global option: post counts in standalone function disabled
-        if (!isset($options[$this->OPT_COUNT_STANDALONE])) {
-            $options[$this->OPT_COUNT_STANDALONE] = false;
-        }
-
-        // global option: add rel="nofollow" to links
-        if (!isset($options[$this->OPT_NOFOLLOW])) {
-            $options[$this->OPT_NOFOLLOW] = false;
+        // global defaults
+        foreach ($global_defaults as $def_key => $def_value) {
+            if (!isset($options[$def_key])) {
+                $options[$def_key] = $def_value;
+            }
         }
 
         // widget options
@@ -311,6 +307,14 @@ class FlexoArchives {
     }
 
     /**
+     * How should months in the lists be sorted
+     */
+    function month_order () {
+        $options = $this->get_opts();
+        return $options[$this->OPT_MONTH_DESC] ? 'DESC' : 'ASC';
+    }
+
+    /**
      * Loads translated strings from catalogs in ./lang
      */
     function load_translations () {
@@ -359,6 +363,7 @@ class FlexoArchives {
         {
             $newoptions[$this->OPT_ANIMATE] = isset($_POST['flexo-animate']);
             $newoptions[$this->OPT_NOFOLLOW] = isset($_POST['flexo-nofollow']);
+            $newoptions[$this->OPT_MONTH_DESC] = isset($_POST['flexo-monthdesc']);
             $newoptions[$this->OPT_STANDALONE] = isset($_POST['flexo-standalone']);
             $newoptions[$this->OPT_COUNT_STANDALONE] = isset($_POST['flexo-count']);
         }
@@ -373,6 +378,7 @@ class FlexoArchives {
         $animate = $this->animation_enabled() ? 'checked="checked"' : '';
         $count = $this->standalone_count_enabled() ? 'checked="checked"' : '';
         $nofollow = $this->nofollow_enabled() ? 'checked="checked"' : '';
+        $monthdesc = $this->month_order() == 'DESC' ? 'checked="checked"' : '';
 
 ?>
 <div class="wrap">
@@ -385,6 +391,7 @@ class FlexoArchives {
       <legend><?php _e('Global Options', 'flexo-archives'); ?></legend>
       <p><label for="flexo-animate"><input type="checkbox" class="checkbox" id="flexo-animate" name="flexo-animate" <?php echo $animate; ?>/> <?php _e('animate collapsing and expanding lists', 'flexo-archives'); ?></label></p>
       <p><label for="flexo-nofollow"><input type="checkbox" class="checkbox" id="flexo-nofollow" name="flexo-nofollow" <?php echo $nofollow; ?>/> <?php _e('add rel="nofollow" to links', 'flexo-archives'); ?></label></p>
+      <p><label for="flexo-monthdesc"><input type="checkbox" class="checkbox" id="flexo-monthdesc" name="flexo-monthdesc" <?php echo $monthdesc; ?>/> <?php _e('sort months in descending order', 'flexo-archives'); ?></label></p>
     </fieldset>
 
   <p><?php _e('The following options are only relevant to users who cannot use or do not want to use the sidebar widget. If you are using the widget, then you should ignore the following settings.', 'flexo-archives'); ?></p>
@@ -513,7 +520,8 @@ class FlexoArchives {
         $qstring .= $join . ' ';
         $qstring .= $where;
         $qstring .= " GROUP BY YEAR(post_date), MONTH(post_date)";
-        $qstring .= " ORDER BY YEAR(post_date) DESC, MONTH(post_date) ASC";
+        $qstring .= " ORDER BY YEAR(post_date) DESC, MONTH(post_date) ";
+        $qstring .= $this->month_order();
 
         // Query database
         $flexo_results = $wpdb->get_results($qstring);

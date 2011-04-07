@@ -3,8 +3,8 @@ Contributors: heathharrelson
 Donate link: http://amzn.com/w/J010ZTQZM654 
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.7
-Tested up to: 3.1-RC4
-Stable tag: 2.0.3
+Tested up to: 3.1.1
+Stable tag: 2.1.3
 
 Displays your archives as a compact list of years that expands when clicked, with optional animation.
 
@@ -37,17 +37,39 @@ If you need to use the standalone function:
 
 == Frequently Asked Questions ==
 
-= The colors of the archive lists are funny. =
+= Why do the widget's colors or bullet shapes look funny? =
 
-This is something I hear a lot about in connection with the Flexo Archives Widget, but it isn't the widget's fault. The colors of the lists are set (or not) by your theme.  All the widget does is hide or display the lists. It's likely that your theme doesn't have rules in its stylesheet to match the nested lists generated.
+This is something I hear a lot about in connection with the plugin, but it isn't the widget's fault. While the widget creates and hides the lists used, the colors and bullet shapes of the lists are set by your theme's stylesheet. Your theme probably doesn't have rules in its stylesheet to match the nested lists generated.
 
 To test whether the problem is your theme, temporarily configure your blog to use the default WordPress theme. Expand and contract a few year links in the sidebar. If things don't look odd, the problem is probably with your theme.
 
 == Screenshots ==
 
-1. An expanded archive list and several collapsed archive lists.
+1. An expanded archive list and a collapsed archive list.
 
-== ChangeLog ==
+== Changelog ==
+
+= 2.1.3 =
+
+* By user request, adds an option to choose sort order for months in lists.
+* Simplifies the way default settings are saved.
+
+= 2.1.2 =
+
+* Adds support for having multiple widgets.
+* By user request, adds the option to add rel="nofollow" to links.
+* Dutch translation.
+
+= 2.1.1 =
+
+* Restores compatibility with PHP4. Sorry about that. :(
+
+= 2.1.0 =
+
+* Reimplemented as a class.
+* Fixed issue where users of the standalone function couldn't enable post counts.
+* Play nice with the getarchives_where and getarchives_join filters.
+* Initial internationalization support.
 
 = 2.0.3 =
 
@@ -70,11 +92,23 @@ To test whether the problem is your theme, temporarily configure your blog to us
 
 == Upgrade Notice ==
 
+= 2.1.3 =
+Adds an option to change the sort order of months in the lists. Upgrade if you want this feature.
+
+= 2.1.2 =
+This is a major upgrade that adds support for multiple Flexo widgets. Dutch translation also added.
+
+= 2.1.1 =
+Fixes PHP4 incompatibility introduced by 2.1.0. PHP4 users must upgrade.
+
+= 2.1.0 =
+Fixed an issue with the standalone function and added initial internationalization support. Users of the standalone function or wishing to localize the plugin should upgrade.
+
 = 2.0.3 =
 Added a standalone function for users who can't use the widget.
 
-== 2.0.1 ==
+= 2.0.1 =
 Enhanced security.
 
 = 2.0.0 =
-Adds animation when the list is expanded / contracted.
+Adds animation when the list is expanded / collapsed.

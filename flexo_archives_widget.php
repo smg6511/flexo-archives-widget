@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.1.3
+Version: 2.1.4
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 
@@ -38,8 +38,9 @@ class FlexoArchives {
     var $OPT_STANDALONE = 'standalone'; // bool: standalone func enabled?
     var $OPT_ANIMATE    = 'animate';    // bool: list animation enabled
     var $OPT_NOFOLLOW   = 'nofollow';   // bool: add rel="nofollow" to links
-    var $OPT_COUNT      = 'count';      // bool: post counts in lists
-    var $OPT_COUNT_STANDALONE = 'standalone-count';
+    var $OPT_COUNT      = 'count';      // bool: monthly post counts in lists
+    var $OPT_COUNT_STANDALONE = 'standalone-count'; // bool: monthly post counts
+    var $OPT_YRTOTAL_STANDALONE = 'standalone-yeartotal'; // bool: yearly post total
     var $OPT_WTITLE     = 'title';      // string; widget title string
     var $OPT_CONVERTED  = '2';  // array: converted non-multi widget settings
     var $OPT_MONTH_DESC = 'month-descend'; // bool: order months descending
@@ -105,7 +106,8 @@ class FlexoArchives {
                             $this->OPT_NOFOLLOW => false,
                             $this->OPT_MONTH_DESC => false,
                             $this->OPT_STANDALONE => false,
-                            $this->OPT_COUNT_STANDALONE => false
+                            $this->OPT_COUNT_STANDALONE => false,
+                            $this->OPT_YRCOUNT_STANDALONE => false
                           );
 
         // global defaults
@@ -283,6 +285,14 @@ class FlexoArchives {
      }
 
     /**
+     * Reports whether the user enabled yearly post totals
+     */
+    function standalone_total_enabled () {
+        $options = $this->get_opts();
+        return $options[$this->OPT_YRTOTAL_STANDALONE];
+    }
+
+    /**
      * Reports whether standalone archive function is enabled
      */
     function standalone_enabled () {
@@ -366,6 +376,7 @@ class FlexoArchives {
             $newoptions[$this->OPT_MONTH_DESC] = isset($_POST['flexo-monthdesc']);
             $newoptions[$this->OPT_STANDALONE] = isset($_POST['flexo-standalone']);
             $newoptions[$this->OPT_COUNT_STANDALONE] = isset($_POST['flexo-count']);
+            $newoptions[$this->OPT_YRTOTAL_STANDALONE] = isset($_POST['flexo-yrtotal']);
         }
 
         // save if options changed
@@ -377,6 +388,7 @@ class FlexoArchives {
         $standalone = $this->standalone_enabled() ? 'checked="checked"' : '';
         $animate = $this->animation_enabled() ? 'checked="checked"' : '';
         $count = $this->standalone_count_enabled() ? 'checked="checked"' : '';
+        $total = $this->standalone_total_enabled() ? 'checked="checked"' : '';
         $nofollow = $this->nofollow_enabled() ? 'checked="checked"' : '';
         $monthdesc = $this->month_order() == 'DESC' ? 'checked="checked"' : '';
 
@@ -404,7 +416,8 @@ class FlexoArchives {
     <fieldset>
       <legend><?php _e('Standalone Function Options', 'flexo-archives'); ?></legend>
       <p><label for="flexo-standalone"><input type="checkbox" class="checkbox" id="flexo-standalone" name="flexo-standalone" <?php echo $standalone; ?>/> <?php _e('enable standalone theme function', 'flexo-archives'); ?></label></p>
-      <p><label for="flexo-count"><input type="checkbox" class="checkbox" id="flexo-count" name="flexo-count" <?php echo $count; ?>/> <?php _e('include post counts in lists', 'flexo-archives'); ?></label></p>
+      <p><label for="flexo-count"><input type="checkbox" class="checkbox" id="flexo-count" name="flexo-count" <?php echo $count; ?>/> <?php _e('include monthly post counts in lists', 'flexo-archives'); ?></label></p>
+      <p><label for="flexo-yrtotal"><input type="checkbox" class="checkbox" id="flexo-yrtotal" name="flexo-yrtotal" <?php echo $total; ?>/> <?php _e('show yearly post totals in lists', 'flexo-archives'); ?></label></p>
       </legend>
     </fieldset>
 
@@ -479,16 +492,57 @@ class FlexoArchives {
     }
 
     /**
-     * Helper function to print first bit of year list
+     * Helper function to get yearly post totals.
+     *
+     * Returns: An array. Array keys are years, and array values are the 
+     * number of posts posted that year. The array is empty on failure.
      */
-    function year_start_tags ($year = '') {
+    function year_post_totals () {
+        global $wpdb;
+
+        // Support archive filters other plugins may have inserted
+        $join = apply_filters('getarchives_join', '');
+        $default_where = "WHERE post_type='post' AND post_status='publish'";
+        $where = apply_filters('getarchives_where', $default_where);
+
+        $totals_qstr  = "SELECT YEAR(post_date) AS `year`, ";
+        $totals_qstr .= "COUNT(YEAR(post_date)) AS `total` ";
+        $totals_qstr .= "FROM $wpdb->posts ";
+        $totals_qstr .= $join . ' ';
+        $totals_qstr .= $where;
+        $totals_qstr .= " GROUP BY YEAR(post_date)";
+
+        $totals_array = array();
+
+        $totals_result = $wpdb->get_results($totals_qstr);
+        if ($totals_result) {
+            foreach ($totals_result as $a_result) {
+                $totals_array[$a_result->year] = $a_result->total;
+            }
+        }
+
+        return $totals_array;
+    }
+
+    /**
+     * Helper function to print first bit of year list
+     *
+     * Args:
+     *  $year: String. The year we're creating a start tag for.
+     *  $totals: Array. The array produced by year_post_totals().
+     *
+     * Returns: An HTML fragment that starts the unordered list for
+     * the given year.
+     */
+    function year_start_tags ($year = '', $totals = null) {
         $link_title = __('Year %s archives', 'flexo-archives');
         $nofollow   = $this->nofollow_enabled();
 
         // Ugly strings used in building the tags
         $year_start = '<ul><li><a href="%s" class="flexo-link" ';
         $year_start .= 'title="' . $link_title . '" >';
-        $year_start .= '%s</a><ul class="flexo-list">';
+        $year_start .= (is_null($totals)) ? '%s' : "%s ($totals[$year])";
+        $year_start .= '</a><ul class="flexo-list">';
 
         $link = sprintf($year_start, get_year_link($year), $year, $year);
 
@@ -539,14 +593,24 @@ class FlexoArchives {
      * Constructs the nested unordered lists from data obtained from
      * the database.
      *
+     * Args:
+     *  $count: Boolean. Show per-month post counts.
+     *  $total: Boolean. Show per-year post totals.
+     *
      * Returns: An HTML fragment containing the archives lists
      */
-    function build_archives_list ($count = false) {
+    function build_archives_list ($count = false, $total = false) {
         global $wp_locale;
         $list_html = "";
+        $totals_array = null;
 
         // Whether we should add rel="nofollow"
         $nofollow = $this->nofollow_enabled();
+
+        // If yearly totals are enabled, get totals from database
+        if ($total) {
+            $totals_array = $this->year_post_totals();
+        }
 
         // Get archives from database
         $results = $this->query_archives();
@@ -573,7 +637,7 @@ class FlexoArchives {
                     $list_html .= '</ul></li></ul>';
 
                 $a_year = $a_result->year;
-                $list_html .= $this->year_start_tags($a_result->year) . "\n";
+                $list_html .= $this->year_start_tags($a_result->year, $totals_array) . "\n";
             }
 
             $url = get_month_link($a_result->year, $a_result->month);
@@ -718,7 +782,10 @@ function flexo_standalone_archives () {
     $archives = new FlexoArchives();
 
     if ($archives->standalone_enabled()) {
-        echo $archives->build_archives_list($archives->standalone_count_enabled());
+        echo $archives->build_archives_list(
+                            $archives->standalone_count_enabled(),
+                            $archives->standalone_total_enabled()
+                        );
     }
 }
 

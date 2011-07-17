@@ -72,7 +72,7 @@ The code will output the nested archive lists into the HTML at that point in the
 
 == Screenshots ==
 
-1. An expanded archive list and a collapsed archive list.
+1. An example archive list with one year expanded.
 
 == Changelog ==
 

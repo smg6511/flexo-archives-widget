@@ -76,6 +76,10 @@ The code will output the nested archive lists into the HTML at that point in the
 
 == Changelog ==
 
+= 2.1.5 =
+
+* By user request, adds an option to include yearly post totals in the year links.
+
 = 2.1.3 =
 
 * By user request, adds an option to choose sort order for months in lists.
@@ -118,6 +122,9 @@ The code will output the nested archive lists into the HTML at that point in the
 * Test for WordPress 3.1.
 
 == Upgrade Notice ==
+
+= 2.1.5 =
+Adds an option to include yearly post totals in the year links. Upgrade if you want this feature.
 
 = 2.1.3 =
 Adds an option to change the sort order of months in the lists. Upgrade if you want this feature.

@@ -3,7 +3,7 @@
 Plugin Name: Flexo Archives
 Description: Displays archives as a list of years that expand when clicked
 Author: Heath Harrelson
-Version: 2.1.4
+Version: 2.1.5
 Plugin URI: http://wordpress.org/extend/plugins/flexo-archives-widget/
 */
 
@@ -40,7 +40,8 @@ class FlexoArchives {
     var $OPT_NOFOLLOW   = 'nofollow';   // bool: add rel="nofollow" to links
     var $OPT_COUNT      = 'count';      // bool: monthly post counts in lists
     var $OPT_COUNT_STANDALONE = 'standalone-count'; // bool: monthly post counts
-    var $OPT_YRTOTAL_STANDALONE = 'standalone-yeartotal'; // bool: yearly post total
+    var $OPT_YRTOTAL_STANDALONE = 'standalone-yeartotal'; // bool: yearly post total DEPRECATED
+    var $OPT_YRTOTAL    = 'yeartotal'; // bool: yearly post total
     var $OPT_WTITLE     = 'title';      // string; widget title string
     var $OPT_CONVERTED  = '2';  // array: converted non-multi widget settings
     var $OPT_MONTH_DESC = 'month-descend'; // bool: order months descending
@@ -107,7 +108,8 @@ class FlexoArchives {
                             $this->OPT_MONTH_DESC => false,
                             $this->OPT_STANDALONE => false,
                             $this->OPT_COUNT_STANDALONE => false,
-                            $this->OPT_YRCOUNT_STANDALONE => false
+                            $this->OPT_YRCOUNT_STANDALONE => false,
+                            $this->OPT_YRCOUNT => false
                           );
 
         // global defaults
@@ -115,6 +117,12 @@ class FlexoArchives {
             if (!isset($options[$def_key])) {
                 $options[$def_key] = $def_value;
             }
+        }
+
+        // convert option to print yearly totals to a global option
+        // rather than one for the standalone function only
+        if ($options[$this->OPT_YRCOUNT_STANDALONE]) {
+            $options[$this->OPT_YRCOUNT] = true;
         }
 
         // widget options
@@ -287,9 +295,9 @@ class FlexoArchives {
     /**
      * Reports whether the user enabled yearly post totals
      */
-    function standalone_total_enabled () {
+    function yearly_total_enabled () {
         $options = $this->get_opts();
-        return $options[$this->OPT_YRTOTAL_STANDALONE];
+        return $options[$this->OPT_YRTOTAL];
     }
 
     /**
@@ -376,7 +384,7 @@ class FlexoArchives {
             $newoptions[$this->OPT_MONTH_DESC] = isset($_POST['flexo-monthdesc']);
             $newoptions[$this->OPT_STANDALONE] = isset($_POST['flexo-standalone']);
             $newoptions[$this->OPT_COUNT_STANDALONE] = isset($_POST['flexo-count']);
-            $newoptions[$this->OPT_YRTOTAL_STANDALONE] = isset($_POST['flexo-yrtotal']);
+            $newoptions[$this->OPT_YRTOTAL] = isset($_POST['flexo-yrtotal']);
         }
 
         // save if options changed
@@ -388,7 +396,7 @@ class FlexoArchives {
         $standalone = $this->standalone_enabled() ? 'checked="checked"' : '';
         $animate = $this->animation_enabled() ? 'checked="checked"' : '';
         $count = $this->standalone_count_enabled() ? 'checked="checked"' : '';
-        $total = $this->standalone_total_enabled() ? 'checked="checked"' : '';
+        $total = $this->yearly_total_enabled() ? 'checked="checked"' : '';
         $nofollow = $this->nofollow_enabled() ? 'checked="checked"' : '';
         $monthdesc = $this->month_order() == 'DESC' ? 'checked="checked"' : '';
 
@@ -404,6 +412,7 @@ class FlexoArchives {
       <p><label for="flexo-animate"><input type="checkbox" class="checkbox" id="flexo-animate" name="flexo-animate" <?php echo $animate; ?>/> <?php _e('animate collapsing and expanding lists', 'flexo-archives'); ?></label></p>
       <p><label for="flexo-nofollow"><input type="checkbox" class="checkbox" id="flexo-nofollow" name="flexo-nofollow" <?php echo $nofollow; ?>/> <?php _e('add rel="nofollow" to links', 'flexo-archives'); ?></label></p>
       <p><label for="flexo-monthdesc"><input type="checkbox" class="checkbox" id="flexo-monthdesc" name="flexo-monthdesc" <?php echo $monthdesc; ?>/> <?php _e('sort months in descending order', 'flexo-archives'); ?></label></p>
+      <p><label for="flexo-yrtotal"><input type="checkbox" class="checkbox" id="flexo-yrtotal" name="flexo-yrtotal" <?php echo $total; ?>/> <?php _e('show yearly post totals in lists', 'flexo-archives'); ?></label></p>
     </fieldset>
 
   <p><?php _e('The following options are only relevant to users who cannot use or do not want to use the sidebar widget. If you are using the widget, then you should ignore the following settings.', 'flexo-archives'); ?></p>
@@ -417,7 +426,6 @@ class FlexoArchives {
       <legend><?php _e('Standalone Function Options', 'flexo-archives'); ?></legend>
       <p><label for="flexo-standalone"><input type="checkbox" class="checkbox" id="flexo-standalone" name="flexo-standalone" <?php echo $standalone; ?>/> <?php _e('enable standalone theme function', 'flexo-archives'); ?></label></p>
       <p><label for="flexo-count"><input type="checkbox" class="checkbox" id="flexo-count" name="flexo-count" <?php echo $count; ?>/> <?php _e('include monthly post counts in lists', 'flexo-archives'); ?></label></p>
-      <p><label for="flexo-yrtotal"><input type="checkbox" class="checkbox" id="flexo-yrtotal" name="flexo-yrtotal" <?php echo $total; ?>/> <?php _e('show yearly post totals in lists', 'flexo-archives'); ?></label></p>
       </legend>
     </fieldset>
 
@@ -672,13 +680,14 @@ class FlexoArchives {
         $widget_num = (int) str_replace('flexo-archives-', '', $widget_id);
         $title = $this->widget_title($widget_num);
         $count = $this->widget_count_enabled($widget_num);
+        $yearly_totals = $this->yearly_total_enabled();
 
         // Print out the title
         echo $before_widget; 
         echo $before_title . $title . $after_title;
 
         // Print out the archive list
-        echo $this->build_archives_list($count);
+        echo $this->build_archives_list($count, $yearly_totals);
 
         // Close out the widget
         echo $after_widget; 
@@ -784,7 +793,7 @@ function flexo_standalone_archives () {
     if ($archives->standalone_enabled()) {
         echo $archives->build_archives_list(
                             $archives->standalone_count_enabled(),
-                            $archives->standalone_total_enabled()
+                            $archives->yearly_total_enabled()
                         );
     }
 }

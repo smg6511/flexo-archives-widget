@@ -1,6 +1,13 @@
 2011-07-17 Heath Harrelson <heath.harrelson@gmail.com>
 	* readme.txt: Revise documentation.
 	* screenshot-1.png: Update to show the Twenty Eleven theme.
+	* flexo_archives_widget.php: Generalize yearly post count code.
+
+2011-04-26 Heath Harrelson <heath.harrelson@gmail.com>
+	* flexo_archives_widget.php: Add option to show yearly post totals.
+
+2011-04-07 Heath Harrelson <heath.harrelson@gmail.com>
+	Tag version 2.1.3
 
 2011-03-03 Heath Harrelson <heath.harrelson@gmail.com>
 	Tag version 2.1.2

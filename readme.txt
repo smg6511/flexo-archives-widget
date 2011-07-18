@@ -4,7 +4,7 @@ Donate link: http://amzn.com/w/J010ZTQZM654
 Tags: sidebar, archive, archives, collapsible archive, collapsible, collapse, widget
 Requires at least: 2.7
 Tested up to: 3.2.1
-Stable tag: 2.1.3
+Stable tag: 2.1.5
 
 Displays your archives as a compact list of years that expands when clicked.
 

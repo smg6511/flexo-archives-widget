@@ -798,5 +798,5 @@ function flexo_standalone_archives () {
     }
 }
 
-$flexo_archives = & new FlexoArchives();
+$flexo_archives = new FlexoArchives();
 ?>
